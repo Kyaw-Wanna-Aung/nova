@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOVA · Promotions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CORE ===== */
+    :root {
+      --sky: #7ab9ec;
+      --navy: #1F4E79;
+      --paper: #F8F9FA;
+      --grad-a-start: #005AA7;
+      --grad-a-end: #FFFDE4;
+      --grad-b-start: #1c92d2;
+      --grad-b-end: #f2fcfe;
+    }
+    * { font-family: 'Manrope', sans-serif; }
+    .font-display { font-family: 'Sora', sans-serif; }
+    body { background: var(--paper); }
+ 
+    /* ===== GRADIENTS ===== */
+    .grad-a { background: linear-gradient(135deg, var(--grad-a-start) 0%, var(--grad-a-end) 100%); }
+    .grad-b { background: linear-gradient(135deg, var(--grad-b-start) 0%, var(--grad-b-end) 100%); }
+    .sidebar-grad { background: linear-gradient(200deg, var(--navy) 0%, #123452 100%); }
+ 
+    /* ===== SCROLLBAR ===== */
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #c9dcee; border-radius: 10px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+ 
+    /* ===== CARDS & INTERACTIONS ===== */
+    .card {
+      background: #fff;
+      border: 1px solid #E7ECF1;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .nav-link {
+      transition: all .18s ease;
+      border-left: 3px solid transparent;
+    }
+    .nav-link:hover { background: rgba(122,185,236,0.14); }
+    .nav-link.active {
+      background: rgba(122,185,236,0.22);
+      border-left: 3px solid var(--sky);
+    }
+    .dropdown-chevron.rotated { transform: rotate(180deg); }
+    .glow { box-shadow: 0 8px 24px -8px rgba(31,78,121,0.25); }
+    ::selection { background: var(--sky); color: #fff; }
+ 
+    /* ===== TOAST ===== */
+    .toast { transition: transform .3s ease, opacity .3s ease; }
+ 
+    /* ===== INPUTS ===== */
+    .input-field { transition: all .18s ease; }
+    .input-field:focus {
+      border-color: var(--sky);
+      box-shadow: 0 0 0 4px rgba(122,185,236,0.25);
+      outline: none;
+    }
+ 
+    /* ===== RESPONSIVE SIDEBAR ===== */
+    @media (max-width: 1024px) {
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+    }
+ 
+    /* ===== MODAL ANIMATION ===== */
+    #modalPanel {
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    #modalPanel.scale-100 {
+      transform: scale(1);
+      opacity: 1;
+    }
+ 
+    /* ===== INLINE CLICK-TO-EDIT ===== */
+    .js-editable {
+      cursor: text;
+      transition: background .12s ease, box-shadow .12s ease;
+      border-radius: 6px;
+    }
+    .js-editable:hover {
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.12);
+    }
+    #bannerOverlayTitle.js-editable:hover,
+    #bannerOverlayDescription.js-editable:hover {
+      background: rgba(31,78,121,0.06);
+      box-shadow: 0 0 0 4px rgba(31,78,121,0.06);
+    }
+    .js-editable[contenteditable="true"] {
+      background: rgba(255,255,255,0.16) !important;
+      box-shadow: 0 0 0 2px var(--sky) !important;
+      outline: none;
+    }
+    #bannerOverlayTitle[contenteditable="true"],
+    #bannerOverlayDescription[contenteditable="true"] {
+      background: rgba(122,185,236,0.14) !important;
+    }
+ 
+    /* ===== PRICE TAG ===== */
+    .price-tag .original {
+      text-decoration: line-through;
+      color: #94a3b8;
+      font-weight: 400;
+      margin-right: 6px;
+    }
+    .price-tag .discounted {
+      color: #dc2626;
+      font-weight: 700;
+    }
+ 
+    /* ===== UPDATE BUTTON ===== */
+    .update-banner-btn {
+      background: linear-gradient(135deg, var(--grad-a-start) 0%, var(--grad-a-end) 100%);
+      color: white;
+      padding: 10px 28px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: opacity 0.2s;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px -8px rgba(31,78,121,0.25);
+    }
+    .update-banner-btn:hover {
+      opacity: 0.85;
+    }
+    .update-banner-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+ 
+    /* ===== MISC ===== */
+    .bg-soft-sky { background: rgba(122,185,236,0.08); }
+    .border-soft-sky { border-color: rgba(122,185,236,0.25); }
+    textarea.resize-none { resize: none; }
+  </style>
+</head>
+<body class="text-[#1F2937]">
+<div class="flex min-h-screen">
+ 
+  <!-- ===== SIDEBAR ===== -->
+  <aside id="sidebar" class="sidebar-grad fixed lg:static z-40 w-72 min-h-screen text-white flex flex-col transition-transform duration-300 ease-out">
+    <div class="flex items-center gap-3 px-6 py-6 border-b border-white/10">
+      <div class="w-10 h-10 rounded-xl grad-b flex items-center justify-center font-display font-bold text-[var(--navy)] text-lg shadow-lg">N</div>
+      <div>
+        <p class="font-display font-bold text-lg leading-none">NOVA</p>
+        <p class="text-xs text-white/50 mt-1">EV Transport</p>
+      </div>
+      <button onclick="toggleSidebar()" class="ml-auto lg:hidden text-white/70 hover:text-white">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto scrollbar-thin">
+      <p class="text-[11px] uppercase tracking-wider text-white/40 px-3 mb-2 font-semibold">Overview</p>
+      <a href="index.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Home
+      </a>
+      <a href="analytics.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg>
+        Analytics
+      </a>
+      <a href="notification.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+        Notification
+      </a>
+      <a href="promotion.html" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v9H4v-9M2 7l10-5 10 5-10 5z"/><path d="M12 22V12"/></svg>
+        Promotion
+      </a>
+      <p class="text-[11px] uppercase tracking-wider text-white/40 px-3 mb-2 mt-6 font-semibold">General</p>
+      <a href="route.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16"/><path d="M5 7l-2 2 2 2"/><path d="M19 13l2 2-2 2"/></svg>
+        Routes
+      </a>
+      <a href="drivers-page.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Drivers
+      </a>
+      <a href="vehicles-page.html" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7h-9M14 17H5M17 20l3-3-3-3M7 4L4 7l3 3"/></svg>
+        Vehicles
+      </a>
+      <p class="text-[11px] uppercase tracking-wider text-white/40 px-3 mb-2 mt-6 font-semibold">Manage</p>
+      <div>
+        <button type="button" onclick="toggleDropdown('navDropdown2', this)" class="nav-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8h18"/><path d="M8 12h8"/><path d="M8 16h8"/></svg>
+          Website
+          <svg class="dropdown-chevron ml-auto transition-transform duration-200" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div id="navDropdown2" class="hidden pl-9 pr-1 mt-1 space-y-1">
+          <a href="vision-mission.html" class="nav-link flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-white/70"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>Vision & Mission</a>
+          <a href="blog-post-page.html" class="nav-link flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-white/70"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>Blogs</a>
+          <a href="subscriptions.html" class="nav-link flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-white/70"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>Subscriptions</a>
+          <a href="faq.html" class="nav-link flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-white/70"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>FAQ</a>
+          <a href="testimonials.html" class="nav-link flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-white/70"><span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>Testimonials</a>
+        </div>
+      </div>
+      <p class="text-[11px] uppercase tracking-wider text-white/40 px-3 mb-2 mt-6 font-semibold">System</p>
+      <a href="#" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 .51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+    <div class="p-4 border-t border-white/10">
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+        <img src="https://i.pravatar.cc/64?img=32" class="w-9 h-9 rounded-full ring-2 ring-[var(--sky)]/50" />
+        <div class="min-w-0">
+          <p class="text-sm font-semibold truncate">Alex Morgan</p>
+          <p class="text-xs text-white/50 truncate">Super Admin</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+ 
+  <div id="overlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/30 z-30 lg:hidden"></div>
+ 
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="flex-1 min-w-0 flex flex-col">
+ 
+    <!-- TOPBAR -->
+    <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-[#E7ECF1] px-4 sm:px-8 py-4 flex items-center gap-4">
+      <button onclick="toggleSidebar()" class="lg:hidden text-[var(--navy)]">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <div>
+        <h1 class="font-display font-bold text-xl sm:text-2xl text-[var(--navy)]">Promotions</h1>
+        <p class="text-sm text-slate-500 hidden sm:block">Manage your promotional deals &amp; seasonal routes.</p>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <button class="relative w-10 h-10 rounded-full bg-[#F1F4F8] flex items-center justify-center hover:bg-[#e7edf5] transition">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="absolute top-1.5 right-2 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+        </button>
+        <img src="https://i.pravatar.cc/64?img=32" class="w-9 h-9 rounded-full ring-2 ring-[var(--sky)]/50" />
+        <div class="relative">
+          <button onclick="toggleDropdown('userDropdown', this)" class="flex items-center gap-2 text-sm font-medium text-[var(--navy)] hover:text-[var(--sky)] transition">
+            <span>Ko Thet</span>
+            <svg class="dropdown-chevron transition-transform duration-200" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-10">
+            <a href="#" class="block px-4 py-2 text-sm text-slate-600 hover:bg-[#F1F4F8]">Profile</a>
+            <a href="#" class="block px-4 py-2 text-sm text-slate-600 hover:bg-[#F1F4F8]">Settings</a>
+            <a href="#" class="block px-4 py-2 text-sm text-slate-600 hover:bg-[#F1F4F8]">Billing</a>
+            <div class="border-t border-slate-100 my-1"></div>
+            <a href="#" class="block px-4 py-2 text-sm text-slate-600 hover:bg-[#F1F4F8]">Sign out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+ 
+    <main class="flex-1 px-4 sm:px-8 py-6 max-w-[1400px] w-full mx-auto">
+ 
+      <!-- ===== HERO BANNER PREVIEW ===== -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="font-display font-bold text-xl text-[var(--navy)]">Homepage Promo Banner</h2>
+            <p class="text-sm text-slate-500">This is the banner shown at the top of your website's promotions section.</p>
+          </div>
+          <span class="hidden sm:flex items-center gap-1.5 text-xs font-medium text-[var(--navy)] bg-[#EAF3FC] px-3 py-1.5 rounded-full">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+            Click any text below to edit it directly
+          </span>
+        </div>
+        <div class="card overflow-hidden p-2 sm:p-3">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <!-- Left panel -->
+            <div id="bannerLeft" class="rounded-2xl p-6 sm:p-8 flex flex-col justify-center" style="background:var(--navy);">
+              <div class="flex items-center gap-2 text-[11px] font-bold tracking-wider uppercase text-sky-300">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--sky)" stroke="var(--sky)" stroke-width="1"><path d="M12 2C7 2 3 6 3 11c0 5 4 9 9 11 5-2 9-6 9-11 0-5-4-9-9-9z"/></svg>
+                <span id="bannerBadge" class="js-editable" data-field="badge">SUSTAINABLE TRAVEL</span>
+              </div>
+              <h3 id="bannerHeadline" class="js-editable font-display font-extrabold text-3xl sm:text-4xl text-white mt-3 leading-tight" data-field="headline">20% OFF YOUR FIRST RIDE</h3>
+              <p id="bannerDescription" class="js-editable text-white/70 text-sm mt-4 leading-relaxed max-w-md" data-field="description"></p>
+              <div class="flex items-center gap-6 mt-6">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shrink-0" id="bannerCard1Icon"></div>
+                  <div>
+                    <p id="bannerCard1Title" class="js-editable text-sm font-bold text-white leading-tight" data-field="card1Title">100% Electric</p>
+                    <p id="bannerCard1Subtitle" class="js-editable text-xs text-white/60" data-field="card1Subtitle">Zero Emissions</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shrink-0" id="bannerCard2Icon"></div>
+                  <div>
+                    <p id="bannerCard2Title" class="js-editable text-sm font-bold text-white leading-tight" data-field="card2Title">Business Class</p>
+                    <p id="bannerCard2Subtitle" class="js-editable text-xs text-white/60" data-field="card2Subtitle">Ultimate Comfort</p>
+                  </div>
+                </div>
+              </div>
+              <button class="mt-7 bg-white text-[var(--navy)] text-sm font-bold px-6 py-3 rounded-full w-fit hover:opacity-90 transition">
+                <span id="bannerButtonText" class="js-editable" data-field="buttonText">Claim Discount</span>
+              </button>
+            </div>
+            <!-- Right panel -->
+            <div class="relative rounded-2xl overflow-hidden min-h-[280px] bg-slate-200 group cursor-pointer" id="bannerImageWrap" title="Click to change image">
+              <img id="bannerImage" src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&q=80" class="w-full h-full object-cover absolute inset-0" />
+              <input id="bannerImageInput" type="file" accept="image/*" class="hidden" />
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition flex items-center justify-center">
+                <span class="opacity-0 group-hover:opacity-100 transition text-white text-xs font-semibold bg-black/50 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  Click to change image
+                </span>
+              </div>
+              <div class="absolute bottom-4 right-4 left-4 sm:left-auto sm:w-72 bg-white/90 backdrop-blur rounded-xl p-4 shadow-lg">
+                <p id="bannerOverlayTitle" class="js-editable font-display font-bold text-[var(--navy)] text-base" data-field="overlayTitle">Sustainable Luxury</p>
+                <p id="bannerOverlayDescription" class="js-editable text-sm text-slate-600 mt-1 leading-relaxed" data-field="overlayDescription"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Update Button below card -->
+        <div class="flex justify-end mt-3">
+          <button onclick="updateBanner()" class="update-banner-btn flex items-center gap-2" id="updateBannerBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+            Update
+          </button>
+        </div>
+      </div>
+ 
+      <!-- ===== SEASONAL ROUTES SECTION ===== -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="font-display font-bold text-xl text-[var(--navy)]">Seasonal Routes &amp; Deals</h2>
+            <p class="text-sm text-slate-500">Explore Myanmar's most iconic journeys with special seasonal rates.</p>
+          </div>
+          <button onclick="openModal()" class="flex items-center gap-2 grad-a text-white text-sm font-semibold px-4 py-2.5 rounded-lg glow hover:opacity-90 transition">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add Promotion
+          </button>
+        </div>
+      </div>
+ 
+      <!-- ===== PROMOTION GRID ===== -->
+      <div id="promoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+ 
+      <!-- ===== NO RESULTS ===== -->
+      <div id="noResults" class="hidden flex-col items-center justify-center py-16 text-center card mt-4">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" class="mb-3"><path d="M20 12v9H4v-9M2 7l10-5 10 5-10 5z"/><path d="M12 22V12"/></svg>
+        <p class="font-semibold text-slate-500">No promotions found</p>
+        <p class="text-sm text-slate-400 mt-1">Add a new promotion to get started.</p>
+      </div>
+ 
+    </main>
+  </div>
+</div>
+ 
+<!-- ===== ADD / EDIT PROMOTION MODAL ===== -->
+<div id="modalOverlay" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+  <div id="modalPanel" class="bg-white rounded-2xl w-full max-w-lg shadow-2xl">
+    <div class="flex items-start justify-between px-6 pt-6 pb-4 border-b border-slate-100">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl grad-a flex items-center justify-center shrink-0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20 12v9H4v-9M2 7l10-5 10 5-10 5z"/><path d="M12 22V12"/></svg></div>
+        <div><h3 class="font-display font-bold text-lg text-[var(--navy)]" id="modalTitle">Add Promotion</h3><p class="text-sm text-slate-500">Create a new seasonal route deal.</p></div>
+      </div>
+      <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <form id="promoForm" novalidate>
+      <input type="hidden" id="promoId" value="" />
+      <div class="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto scrollbar-thin">
+        <div>
+          <label class="text-sm font-medium text-slate-600">Image</label>
+          <div class="mt-1.5 flex items-center gap-4">
+            <img id="imagePreview" src="" class="hidden w-20 h-20 rounded-xl object-cover border border-slate-200" />
+            <div id="imagePlaceholder" class="w-20 h-20 rounded-xl bg-[#F1F4F8] flex items-center justify-center border border-dashed border-slate-300 text-slate-300">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            </div>
+            <div class="flex-1">
+              <input id="promoImage" type="file" accept="image/*" class="input-field w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-white file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#E9F2FC] file:text-[var(--navy)] file:text-xs file:font-semibold" />
+              <p class="text-xs text-slate-400 mt-1">Upload a promotional banner image.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="promoRoute" class="text-sm font-medium text-slate-600">Route</label>
+          <input id="promoRoute" type="text" placeholder="e.g. Yangon to Mandalay" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none" />
+          <p id="promoRouteError" class="hidden text-xs text-rose-500 mt-1.5">Enter a route name.</p>
+        </div>
+        <div>
+          <label for="promoAbout" class="text-sm font-medium text-slate-600">Description</label>
+          <textarea id="promoAbout" rows="3" placeholder="Describe the promotion…" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none resize-none"></textarea>
+          <p id="promoAboutError" class="hidden text-xs text-rose-500 mt-1.5">Enter a description.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="promoOriginalPrice" class="text-sm font-medium text-slate-600">Original Price (MMK)</label>
+            <input id="promoOriginalPrice" type="number" placeholder="45000" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none" />
+            <p id="promoOriginalPriceError" class="hidden text-xs text-rose-500 mt-1.5">Enter original price.</p>
+          </div>
+          <div>
+            <label for="promoDiscountedPrice" class="text-sm font-medium text-slate-600">Discounted Price (MMK)</label>
+            <input id="promoDiscountedPrice" type="number" placeholder="38500" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none" />
+            <p id="promoDiscountedPriceError" class="hidden text-xs text-rose-500 mt-1.5">Enter discounted price.</p>
+          </div>
+        </div>
+        <div>
+          <label for="promoDuration" class="text-sm font-medium text-slate-600">Duration</label>
+          <input id="promoDuration" type="text" placeholder="e.g. 8-9 Hours Journey" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none" />
+        </div>
+        <div>
+          <label for="promoDepartures" class="text-sm font-medium text-slate-600">Daily Departures</label>
+          <input id="promoDepartures" type="text" placeholder="e.g. 8:00 AM, 9:00 PM" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none" />
+        </div>
+      </div>
+      <div class="flex items-center gap-3 px-6 py-4 border-t border-slate-100 bg-[#FBFCFD] rounded-b-2xl">
+        <button type="button" onclick="closeModal()" class="flex-1 border border-slate-200 text-slate-600 text-sm font-semibold py-2.5 rounded-xl hover:bg-slate-50 transition">Cancel</button>
+        <button type="submit" class="flex-1 grad-a text-white text-sm font-semibold py-2.5 rounded-xl glow hover:opacity-90 transition"><span id="promoSubmitText">Add Promotion</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+ 
+<!-- ===== TOAST ===== -->
+<div id="toast" class="toast fixed bottom-6 right-6 translate-y-24 opacity-0 bg-[var(--navy)] text-white text-sm font-medium px-5 py-3 rounded-xl shadow-xl z-50 flex items-center gap-2">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastMsg">Done</span>
+</div>
+ 
+<script>
+  // ===== SIDEBAR =====
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('hidden');
+  }
+ 
+  function toggleDropdown(id, btn) {
+    const panel = document.getElementById(id);
+    const chevron = btn.querySelector('.dropdown-chevron');
+    panel.classList.toggle('hidden');
+    chevron.classList.toggle('rotated');
+  }
+ 
+  // ===== TOAST =====
+  let toastTimer;
+ 
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg || 'Done';
+    toast.classList.remove('translate-y-24', 'opacity-0');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 2400);
+  }
+ 
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+ 
+  // ===== HERO BANNER =====
+  const BANNER_KEY = 'nova_promo_banner_v1';
+  const defaultBanner = {
+    badge: 'SUSTAINABLE TRAVEL',
+    headline: '20% OFF YOUR FIRST RIDE',
+    description: 'Join the movement toward cleaner transit. Use code **NOVAEV24** and experience our all-electric premium fleet for less.',
+    buttonText: 'Claim Discount',
+    card1Icon: 'bolt', card1Title: '100% Electric', card1Subtitle: 'Zero Emissions',
+    card2Icon: 'seat', card2Title: 'Business Class', card2Subtitle: 'Ultimate Comfort',
+    image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&q=80',
+    overlayTitle: 'Sustainable Luxury',
+    overlayDescription: 'Redefining the intercity commute with silent engines and zero emissions.',
+    updatedAt: null
+  };
+  const bannerIcons = {
+    bolt: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+    seat: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 18v-6a2 2 0 0 1 2-2h2V6a2 2 0 0 1 2-2h4"/><path d="M8 10v8h11v-4a2 2 0 0 0-2-2h-3"/></svg>',
+    shield: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg>',
+    clock: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
+    leaf: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M11 20A7 7 0 0 1 4 13c0-6 7-11 15-11 0 8-5 15-11 15-1 0-2-.2-3-.6"/></svg>'
+  };
+ 
+  function loadBanner() {
+    try {
+      const data = JSON.parse(localStorage.getItem(BANNER_KEY));
+      if (!data) { saveBanner(defaultBanner); return { ...defaultBanner }; }
+      return Object.assign({}, defaultBanner, data);
+    } catch (e) { saveBanner(defaultBanner); return { ...defaultBanner }; }
+  }
+  function saveBanner(data) { localStorage.setItem(BANNER_KEY, JSON.stringify(data)); }
+ 
+  function formatDescription(text) {
+    return escapeHtml(text).replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>');
+  }
+ 
+  function renderBanner() {
+    const b = loadBanner();
+    document.getElementById('bannerBadge').textContent = b.badge;
+    document.getElementById('bannerHeadline').textContent = b.headline;
+    document.getElementById('bannerDescription').innerHTML = formatDescription(b.description);
+    document.getElementById('bannerButtonText').textContent = b.buttonText;
+    document.getElementById('bannerCard1Icon').innerHTML = bannerIcons[b.card1Icon] || bannerIcons.bolt;
+    document.getElementById('bannerCard1Title').textContent = b.card1Title;
+    document.getElementById('bannerCard1Subtitle').textContent = b.card1Subtitle;
+    document.getElementById('bannerCard2Icon').innerHTML = bannerIcons[b.card2Icon] || bannerIcons.seat;
+    document.getElementById('bannerCard2Title').textContent = b.card2Title;
+    document.getElementById('bannerCard2Subtitle').textContent = b.card2Subtitle;
+    document.getElementById('bannerImage').src = b.image;
+    document.getElementById('bannerOverlayTitle').textContent = b.overlayTitle;
+    document.getElementById('bannerOverlayDescription').textContent = b.overlayDescription;
+  }
+ 
+  document.getElementById('bannerImageWrap').addEventListener('click', function () {
+    document.getElementById('bannerImageInput').click();
+  });
+  document.getElementById('bannerImageInput').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      const banner = loadBanner();
+      banner.image = ev.target.result;
+      banner.updatedAt = new Date().toISOString();
+      saveBanner(banner);
+      renderBanner();
+      showToast('Banner image updated');
+    };
+    reader.readAsDataURL(file);
+  });
+ 
+  renderBanner();
+ 
+  // ===== jQUERY CLICK-TO-EDIT (INLINE) =====
+  $(function () {
+    // Click a text element on the banner to edit it directly
+    $(document).on('click', '.js-editable', function () {
+      const $el = $(this);
+      if ($el.attr('contenteditable') === 'true') return; // already editing
+ 
+      const field = $el.data('field');
+      const banner = loadBanner();
+      const raw = banner[field] !== undefined ? banner[field] : $el.text().trim();
+ 
+      $el.attr('data-editing-field', field);
+      $el.attr('contenteditable', 'true');
+      $el.text(raw); // show raw text (e.g. **bold** markers) while editing
+      $el.trigger('focus');
+ 
+      // select all text inside for quick overtype
+      const range = document.createRange();
+      range.selectNodeContents(this);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+  });
+ 
+  // ===== UPDATE BANNER FUNCTION =====
+  function updateBanner() {
+    const btn = document.getElementById('updateBannerBtn');
+    btn.disabled = true;
+    btn.innerHTML = `
+      <svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <circle cx="12" cy="12" r="9" opacity="0.25"/>
+        <path d="M21 12a9 9 0 0 0-9-9"/>
+      </svg>
+      Updating...
+    `;
+ 
+    // Collect all editable fields from the banner
+    const editableElements = document.querySelectorAll('.js-editable');
+    const banner = loadBanner();
+ 
+    editableElements.forEach(function(el) {
+      const field = el.dataset.field;
+      const value = el.textContent.trim();
+      if (banner[field] !== undefined) {
+        banner[field] = value;
+      }
+    });
+ 
+    banner.updatedAt = new Date().toISOString();
+    saveBanner(banner);
+ 
+    // Re-render banner with proper formatting
+    renderBanner();
+ 
+    // Reset button
+    btn.disabled = false;
+    btn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+      Update
+    `;
+ 
+    showToast('Banner updated successfully');
+  }
+ 
+  // ===== STORAGE =====
+  const STORAGE_KEY = 'nova_promotions_v1';
+ 
+  const defaultPromotions = [
+    { 
+      id: '1', 
+      image: '', 
+      route: 'Yangon to Mandalay', 
+      about: '8-9 Hours Journey', 
+      originalPrice: '45000', 
+      discountedPrice: '38500',
+      duration: '8-9 Hours Journey',
+      departures: '8:00 AM, 9:00 PM'
+    },
+    { 
+      id: '2', 
+      image: '', 
+      route: 'Mandalay to Bagan', 
+      about: '4 Hours Journey', 
+      originalPrice: '25000', 
+      discountedPrice: '19000',
+      duration: '4 Hours Journey',
+      departures: '7:30 AM, 1:30 PM'
+    },
+    { 
+      id: '3', 
+      image: '', 
+      route: 'Mandalay to Bagan', 
+      about: '4 Hours Journey', 
+      originalPrice: '25000', 
+      discountedPrice: '19000',
+      duration: '4 Hours Journey',
+      departures: '7:30 AM, 1:30 PM'
+    }
+  ];
+ 
+  function loadPromotions() {
+    try {
+      const items = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (!Array.isArray(items) || items.length === 0) { savePromotions(defaultPromotions); return defaultPromotions.slice(); }
+      return items;
+    } catch (e) { savePromotions(defaultPromotions); return defaultPromotions.slice(); }
+  }
+ 
+  function savePromotions(items) { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }
+ 
+  // ===== RENDER =====
+  function render() {
+    const items = loadPromotions();
+ 
+    const grid = document.getElementById('promoGrid');
+    const noResults = document.getElementById('noResults');
+ 
+    if (items.length === 0) {
+      grid.innerHTML = '';
+      noResults.classList.remove('hidden');
+      noResults.classList.add('flex');
+      return;
+    }
+    noResults.classList.add('hidden');
+    noResults.classList.remove('flex');
+ 
+    grid.innerHTML = items.map(p => {
+      const imgHtml = p.image
+        ? `<img src="${p.image}" class="w-full h-36 object-cover rounded-xl" />`
+        : `<div class="w-full h-36 rounded-xl bg-[#F1F4F8] flex items-center justify-center text-slate-300"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>`;
+ 
+      return `
+      <div class="card p-4 flex flex-col">
+        ${imgHtml}
+        <p class="font-display font-bold text-[16px] text-[var(--navy)] mt-3">${escapeHtml(p.route)}</p>
+        <p class="text-sm text-slate-500">${escapeHtml(p.about)}</p>
+        ${p.duration ? `<p class="text-sm text-slate-500">${escapeHtml(p.duration)}</p>` : ''}
+        ${p.departures ? `<p class="text-sm text-slate-500">Daily Departures: ${escapeHtml(p.departures)}</p>` : ''}
+        <div class="price-tag text-base mt-2">
+          <span class="original">${Number(p.originalPrice).toLocaleString()} MMK</span>
+          <span class="discounted">${Number(p.discountedPrice).toLocaleString()} MMK</span>
+        </div>
+        <div class="mt-3 flex items-center justify-end gap-1 pt-3 border-t border-slate-100">
+          <button onclick="editPromo('${p.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-[var(--navy)] hover:bg-slate-100" title="Edit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+          </button>
+          <button onclick="deletePromo('${p.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50" title="Delete">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6"/></svg>
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+ 
+  // ===== MODAL =====
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalPanel = document.getElementById('modalPanel');
+  let pendingImage = '';
+ 
+  function openModal() {
+    const isEdit = !!document.getElementById('promoId').value;
+    document.getElementById('modalTitle').textContent = isEdit ? 'Edit Promotion' : 'Add Promotion';
+    document.getElementById('promoSubmitText').textContent = isEdit ? 'Save changes' : 'Add Promotion';
+    modalOverlay.classList.remove('hidden');
+    modalOverlay.classList.add('flex');
+    requestAnimationFrame(() => {
+      modalPanel.classList.remove('scale-95', 'opacity-0');
+      modalPanel.classList.add('scale-100', 'opacity-100');
+    });
+    document.body.classList.add('overflow-hidden');
+    setTimeout(() => document.getElementById('promoRoute').focus(), 150);
+  }
+ 
+  function closeModal() {
+    modalPanel.classList.remove('scale-100', 'opacity-100');
+    modalPanel.classList.add('scale-95', 'opacity-0');
+    document.body.classList.remove('overflow-hidden');
+    setTimeout(() => {
+      modalOverlay.classList.add('hidden');
+      modalOverlay.classList.remove('flex');
+      resetPromoForm();
+    }, 180);
+  }
+ 
+  function resetPromoForm() {
+    document.getElementById('promoForm').reset();
+    document.getElementById('promoId').value = '';
+    pendingImage = '';
+    document.getElementById('imagePreview').src = '';
+    document.getElementById('imagePreview').classList.add('hidden');
+    document.getElementById('imagePlaceholder').classList.remove('hidden');
+    ['promoAboutError', 'promoRouteError', 'promoOriginalPriceError', 'promoDiscountedPriceError'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  }
+ 
+  modalOverlay.addEventListener('click', function(e) {
+    if (e.target === modalOverlay) closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !modalOverlay.classList.contains('hidden')) closeModal();
+  });
+ 
+  // ===== IMAGE UPLOAD =====
+  document.getElementById('promoImage').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      pendingImage = ev.target.result;
+      document.getElementById('imagePreview').src = pendingImage;
+      document.getElementById('imagePreview').classList.remove('hidden');
+      document.getElementById('imagePlaceholder').classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+  });
+ 
+  // ===== INPUT VALIDATION =====
+  ['promoRoute', 'promoAbout', 'promoOriginalPrice', 'promoDiscountedPrice'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+      this.classList.remove('border-rose-400');
+      document.getElementById(id + 'Error').classList.add('hidden');
+    });
+  });
+ 
+  // ===== FORM SUBMIT =====
+  document.getElementById('promoForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+ 
+    const routeEl = document.getElementById('promoRoute');
+    const aboutEl = document.getElementById('promoAbout');
+    const originalPriceEl = document.getElementById('promoOriginalPrice');
+    const discountedPriceEl = document.getElementById('promoDiscountedPrice');
+ 
+    let valid = true;
+ 
+    if (routeEl.value.trim().length < 3) {
+      routeEl.classList.add('border-rose-400');
+      document.getElementById('promoRouteError').classList.remove('hidden');
+      valid = false;
+    }
+    if (aboutEl.value.trim().length < 3) {
+      aboutEl.classList.add('border-rose-400');
+      document.getElementById('promoAboutError').classList.remove('hidden');
+      valid = false;
+    }
+    if (!originalPriceEl.value || Number(originalPriceEl.value) <= 0) {
+      originalPriceEl.classList.add('border-rose-400');
+      document.getElementById('promoOriginalPriceError').classList.remove('hidden');
+      valid = false;
+    }
+    if (!discountedPriceEl.value || Number(discountedPriceEl.value) <= 0) {
+      discountedPriceEl.classList.add('border-rose-400');
+      document.getElementById('promoDiscountedPriceError').classList.remove('hidden');
+      valid = false;
+    }
+    if (!valid) return;
+ 
+    const items = loadPromotions();
+    const id = document.getElementById('promoId').value;
+    const payload = {
+      route: routeEl.value.trim(),
+      about: aboutEl.value.trim(),
+      originalPrice: originalPriceEl.value,
+      discountedPrice: discountedPriceEl.value,
+      duration: document.getElementById('promoDuration').value.trim(),
+      departures: document.getElementById('promoDepartures').value.trim(),
+      image: pendingImage || (id ? (items.find(x => x.id === id) || {}).image || '' : '')
+    };
+ 
+    if (id) {
+      const idx = items.findIndex(x => x.id === id);
+      if (idx >= 0) { items[idx] = Object.assign(items[idx], payload); }
+    } else {
+      items.unshift(Object.assign({ id: String(Date.now()) }, payload));
+    }
+ 
+    savePromotions(items);
+    closeModal();
+    render();
+    showToast(id ? 'Promotion updated successfully' : 'Promotion added successfully');
+  });
+ 
+  // ===== EDIT & DELETE =====
+  function editPromo(id) {
+    const items = loadPromotions();
+    const p = items.find(x => x.id === id);
+    if (!p) return;
+ 
+    document.getElementById('promoId').value = p.id;
+    document.getElementById('promoRoute').value = p.route || '';
+    document.getElementById('promoAbout').value = p.about || '';
+    document.getElementById('promoOriginalPrice').value = p.originalPrice || '';
+    document.getElementById('promoDiscountedPrice').value = p.discountedPrice || '';
+    document.getElementById('promoDuration').value = p.duration || '';
+    document.getElementById('promoDepartures').value = p.departures || '';
+ 
+    pendingImage = p.image || '';
+    if (p.image) {
+      document.getElementById('imagePreview').src = p.image;
+      document.getElementById('imagePreview').classList.remove('hidden');
+      document.getElementById('imagePlaceholder').classList.add('hidden');
+    } else {
+      document.getElementById('imagePreview').classList.add('hidden');
+      document.getElementById('imagePlaceholder').classList.remove('hidden');
+    }
+ 
+    openModal();
+  }
+ 
+  function deletePromo(id) {
+    let items = loadPromotions();
+    items = items.filter(x => x.id !== id);
+    savePromotions(items);
+    showToast('Promotion deleted');
+    render();
+  }
+ 
+  // ===== INITIAL RENDER =====
+  render();
+</script>
+</body>
+</html>

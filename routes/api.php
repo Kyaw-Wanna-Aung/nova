@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\AdminAuthController;
+// ⚠️ အရေးကြီး: Api အစား Admin Controller လမ်းကြောင်းများသို့ ပြောင်းလဲထားပါသည်
+use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\RouteController;
+use App\Http\Controllers\Admin\HeroBannerController;
+use App\Http\Controllers\Admin\PromotionController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\RouteController;
-use App\Http\Controllers\Api\HeroBannerController;
-use App\Http\Controllers\Api\PromotionController;
 
 /*
 |--------------------------------------------------------------------------
