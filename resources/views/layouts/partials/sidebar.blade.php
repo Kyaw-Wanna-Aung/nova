@@ -71,19 +71,19 @@
 
         <p class="text-[11px] uppercase tracking-wider text-white/40 px-3 mb-2 mt-6 font-semibold">General</p>
 
-        {{-- Routes --}}
-        @php $routeExists = Route::has('admin.routes.index'); @endphp
-        <a href="{{ $routeExists ? route('admin.routes.index') : '#' }}"
-           @unless ($routeExists) aria-disabled="true" title="Coming soon" @endunless
-           class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-                  {{ $routeExists && request()->routeIs('admin.routes.*') ? 'active text-white' : 'text-white/80' }}
-                  {{ ! $routeExists ? 'opacity-40 cursor-not-allowed pointer-events-none' : '' }}">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16"/><path d="M5 7l-2 2 2 2"/><path d="M19 13l2 2-2 2"/></svg>
-            Routes
-            @unless ($routeExists)
-                <span class="ml-auto text-[9px] uppercase tracking-wide text-white/50 bg-white/10 px-1.5 py-0.5 rounded-full">Soon</span>
-            @endunless
-        </a>
+            {{-- Routes --}}
+            @php $routeExists = Route::has('admin.route-management.index'); @endphp
+            <a href="{{ $routeExists ? route('admin.route-management.index') : '#' }}"
+            @unless ($routeExists) aria-disabled="true" title="Coming soon" @endunless
+            class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                    {{ $routeExists && request()->routeIs('admin.route-management.*') ? 'active text-white' : 'text-white/80' }}
+                    {{ ! $routeExists ? 'opacity-40 cursor-not-allowed pointer-events-none' : '' }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16"/><path d="M5 7l-2 2 2 2"/><path d="M19 13l2 2-2 2"/></svg>
+                Routes
+                @unless ($routeExists)
+                    <span class="ml-auto text-[9px] uppercase tracking-wide text-white/50 bg-white/10 px-1.5 py-0.5 rounded-full">Soon</span>
+                @endunless
+            </a>
 
         {{-- Drivers --}}
         @php $routeExists = Route::has('admin.drivers.index'); @endphp

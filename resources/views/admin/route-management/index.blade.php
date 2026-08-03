@@ -178,20 +178,20 @@
                                 <td class="py-3 pr-4 text-slate-500">{{ optional($route->created_at)->format('M j, Y') }}</td>
                                 <td class="py-3 pr-5 text-right">
                                     <div class="inline-flex items-center gap-1">
-                                        <button type="button"
-                                                onclick='editRoute(@json([
-                                                    "id" => $route->id,
-                                                    "name" => $route->name,
-                                                    "origin" => $route->origin,
-                                                    "destination" => $route->destination,
-                                                    "distance" => $route->distance,
-                                                    "type" => $route->type,
-                                                    "status" => $route->status,
-                                                    "created" => optional($route->created_at)->format("Y-m-d"),
-                                                ]))'
-                                                class="p-1.5 rounded-lg text-slate-400 hover:text-[var(--navy)] hover:bg-slate-100" title="Edit">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
-                                        </button>
+                                    <button type="button"
+                                            onclick="editRoute({{ htmlspecialchars(json_encode([
+                                                'id' => $route->id,
+                                                'name' => $route->name,
+                                                'origin' => $route->origin,
+                                                'destination' => $route->destination,
+                                                'distance' => $route->distance,
+                                                'type' => $route->type,
+                                                'status' => $route->status,
+                                                'created' => optional($route->created_at)->format('Y-m-d'),
+                                            ])) }})"
+                                            class="p-1.5 rounded-lg text-slate-400 hover:text-[var(--navy)] hover:bg-slate-100" title="Edit">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                                    </button>
                                         <form method="POST" action="{{ route('admin.route-management.destroy', $route) }}" class="inline" onsubmit="return confirm('Are you sure you want to delete this route?');">
                                             @csrf
                                             @method('DELETE')
@@ -510,23 +510,21 @@
 
     updateSelectedState();
 
-    @if ($errors->any() || isset($selectedRoute))
-        @if (isset($selectedRoute))
-            editRoute(@json([
-                "id" => $selectedRoute->id,
-                "name" => old('name', $selectedRoute->name),
-                "origin" => old('origin', $selectedRoute->origin),
-                "destination" => old('destination', $selectedRoute->destination),
-                "distance" => old('distance', $selectedRoute->distance),
-                "type" => old('type', $selectedRoute->type),
-                "status" => old('status', $selectedRoute->status),
-                "created" => old('created_display', optional($selectedRoute->created_at)->format('Y-m-d')),
-            ]));
-        @else
-            resetToAdd();
-            openModal();
-        @endif
-    @endif
+            @if (isset($selectedRoute))
+                editRoute({!! json_encode([
+                    'id' => $selectedRoute->id,
+                    'name' => old('name', $selectedRoute->name),
+                    'origin' => old('origin', $selectedRoute->origin),
+                    'destination' => old('destination', $selectedRoute->destination),
+                    'distance' => old('distance', $selectedRoute->distance),
+                    'type' => old('type', $selectedRoute->type),
+                    'status' => old('status', $selectedRoute->status),
+                    'created' => old('created_display', optional($selectedRoute->created_at)->format('Y-m-d')),
+                ]) !!});
+            @else
+                resetToAdd();
+            @endif
+ 
 
     @if (session('success'))
         showToast(@json(session('success')));

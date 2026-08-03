@@ -15,12 +15,91 @@
     @php
         $heroImage = $featuredPromotion?->image ? asset('storage/'.$featuredPromotion->image) : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
     @endphp
-    <section class="hero"><div class="container hero-grid"><div class="promo-card"><div><div class="promo-badge">🌿 Sustainable Travel</div><h1>{{ $featuredPromotion?->title ?? 'No promotion currently available' }}</h1><p>{{ $featuredPromotion?->description }}</p><div class="features"><div class="feature"><div class="icon">⚡</div><div><h4>100% Electric</h4><span>Zero Emissions</span></div></div><div class="feature"><div class="icon">🛋</div><div><h4>Business Class</h4><span>Ultimate Comfort</span></div></div></div></div><a href="{{ route('routes.index') }}" class="claim-btn">Claim Discount</a></div><div class="hero-image"><img src="{{ $heroImage }}" alt="{{ $featuredPromotion?->title ?? 'Nova Electric Vehicle' }}" /><div class="image-overlay"><h3>{{ $featuredPromotion?->title ?? 'Sustainable Luxury' }}</h3><p>{{ $featuredPromotion?->description }}</p></div></div></div></section>
-    <section class="deals"><div class="container"><div class="section-header"><div><h2>Seasonal Routes &amp; Deals</h2><p>Explore Myanmar's most iconic journeys with special seasonal rates.</p></div><a href="{{ route('routes.index') }}" class="view-all">View All Routes →</a></div>
-        @foreach ($promotions as $promotion)
-            @php $imageUrl = $promotion->image ? asset('storage/'.$promotion->image) : 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=900&q=80'; @endphp
-            <article class="route-card"><div class="route-image"><img src="{{ $imageUrl }}" alt="{{ $promotion->title }}" />@if ($loop->first)<span class="tag">Best Seller</span>@endif</div><div class="route-info"><h3>{{ $promotion->title }}</h3>@if ($promotion->duration)<p>{{ $promotion->duration }}</p>@endif @if ($promotion->daily_departures)<p>Daily Departures: {{ $promotion->daily_departures }}</p>@endif</div><div class="price"><div class="old-price">{{ number_format((float) $promotion->original_price) }} MMK</div><div class="new-price">{{ number_format((float) $promotion->discounted_price) }} MMK</div></div></article>
-        @endforeach
-    </div></section>
-    <section class="newsletter"><div class="container"><div class="newsletter-box"><h3>Stay Updated on New Routes</h3><p>Join our newsletter to receive exclusive flash deals, early-bird membership invites, and Myanmar travel insights directly in your inbox.</p><form method="POST" action="{{ route('newsletter.subscribe') }}" class="subscribe">@csrf<input name="email" type="email" value="{{ old('email') }}" placeholder="Enter your business email" required /><button type="submit">Subscribe Now</button></form>@error('email')<small>{{ $message }}</small>@enderror @if (session('success') || session('error'))<small>{{ session('success') ?? session('error') }}</small>@else<small>We respect your privacy. Unsubscribe at any time.</small>@endif</div></div></section>
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="promo-card">
+                <div>
+                    <div class="promo-badge">🌿 Sustainable Travel</div>
+                    <h1>{{ $featuredPromotion?->title ?? 'No promotion currently available' }}</h1>
+                    <p>{{ $featuredPromotion?->description }}</p>
+                    <div class="features">
+                        <div class="feature">
+                            <div class="icon">⚡</div>
+                            <div>
+                                <h4>100% Electric</h4>
+                                <span>Zero Emissions</span>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <div class="icon">🛋</div>
+                            <div>
+                                <h4>Business Class</h4>
+                                <span>Ultimate Comfort</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- routes.index အစား # သို့ ပြောင်းထားပါသည် --}}
+                <a href="#" class="claim-btn">Claim Discount</a>
+            </div>
+            <div class="hero-image">
+                <img src="{{ $heroImage }}" alt="{{ $featuredPromotion?->title ?? 'Nova Electric Vehicle' }}" />
+                <div class="image-overlay">
+                    <h3>{{ $featuredPromotion?->title ?? 'Sustainable Luxury' }}</h3>
+                    <p>{{ $featuredPromotion?->description }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="deals">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h2>Seasonal Routes &amp; Deals</h2>
+                    <p>Explore Myanmar's most iconic journeys with special seasonal rates.</p>
+                </div>
+                {{-- routes.index အစား # သို့ ပြောင်းထားပါသည် --}}
+                <a href="#" class="view-all">View All Routes →</a>
+            </div>
+            @foreach ($promotions as $promotion)
+                @php $imageUrl = $promotion->image ? asset('storage/'.$promotion->image) : 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=900&q=80'; @endphp
+                <article class="route-card">
+                    <div class="route-image">
+                        <img src="{{ $imageUrl }}" alt="{{ $promotion->title }}" />
+                        @if ($loop->first)<span class="tag">Best Seller</span>@endif
+                    </div>
+                    <div class="route-info">
+                        <h3>{{ $promotion->title }}</h3>
+                        @if ($promotion->duration)<p>{{ $promotion->duration }}</p>@endif 
+                        @if ($promotion->daily_departures)<p>Daily Departures: {{ $promotion->daily_departures }}</p>@endif
+                    </div>
+                    <div class="price">
+                        <div class="old-price">{{ number_format((float) $promotion->original_price) }} MMK</div>
+                        <div class="new-price">{{ number_format((float) $promotion->discounted_price) }} MMK</div>
+                    </div>
+                </article>
+            @endforeach
+        </div>
+    </section>
+
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-box">
+                <h3>Stay Updated on New Routes</h3>
+                <p>Join our newsletter to receive exclusive flash deals, early-bird membership invites, and Myanmar travel insights directly in your inbox.</p>
+                <form method="POST" action="{{ route('newsletter.subscribe') }}" class="subscribe">
+                    @csrf
+                    <input name="email" type="email" value="{{ old('email') }}" placeholder="Enter your business email" required />
+                    <button type="submit">Subscribe Now</button>
+                </form>
+                @error('email')<small>{{ $message }}</small>@enderror 
+                @if (session('success') || session('error'))
+                    <small>{{ session('success') ?? session('error') }}</small>
+                @else
+                    <small>We respect your privacy. Unsubscribe at any time.</small>
+                @endif
+            </div>
+        </div>
+    </section>
 @endsection

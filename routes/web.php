@@ -1,9 +1,8 @@
-<?php
+﻿<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\RouteController;
 use App\Http\Controllers\Admin\RouteManagementController;
 use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\PromotionController;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Admin\VisionMissionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\User\BlogController as UserBlogController;
+use App\Http\Controllers\User\RouteController as UserRouteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,10 +27,11 @@ Route::get('/download-app', [HomeController::class, 'downloadApp'])->name('downl
 Route::get('/support', [HomeController::class, 'support'])->name('support');
 Route::get('/blog', [UserBlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{blog:slug}', [UserBlogController::class, 'show'])->name('blog.show');
+Route::get('/our-routes', [UserRouteController::class, 'index'])->name('our-routes');
 
 // Public Guest Views
-Route::get('/routes', [RouteController::class, 'index'])->name('routes.index');
-Route::get('/routes/{route}', [RouteController::class, 'show'])->name('routes.show');
+// Route::get('/routes', [RouteController::class, 'index'])->name('routes.index');
+// Route::get('/routes/{route}', [RouteController::class, 'show'])->name('routes.show');
 Route::get('/hero-banner', [HeroBannerController::class, 'show'])->name('hero-banner.show');
 Route::get('/promotions', [HomeController::class, 'promotions'])->name('promotions.index');
 Route::post('/newsletter/subscribe', [NewsletterSubscriptionController::class, 'store'])->name('newsletter.subscribe');
@@ -38,7 +39,7 @@ Route::post('/newsletter/subscribe', [NewsletterSubscriptionController::class, '
 
 /*
 |--------------------------------------------------------------------------
-| Admin Guest Routes (Login ?????????? ?????????????? Routes)
+| Admin Guest Routes
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')->group(function () {
@@ -59,7 +60,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/me', [AdminAuthController::class, 'me'])->name('profile');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
-    // 2. Admin Management (Admin ?????????????????)
+    // 2. Admin Management
     Route::get('/register', [AdminAuthController::class, 'showRegisterForm'])->name('register.form');
     Route::post('/register', [AdminAuthController::class, 'registerAdmin'])->name('register');
 
@@ -68,7 +69,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::post('/routes/bulk', [RouteController::class, 'bulk'])->name('routes.bulk');
     Route::get('/routes-export', [RouteController::class, 'export'])->name('routes.export');
 
-    // 4. Route Management Module (New - with search, filters, status, bulk actions, export)
+    // 4. Route Management Module (route-management)
     Route::resource('route-management', RouteManagementController::class)->except(['create', 'show']);
     Route::patch('/route-management/{routeManagement}/status', [RouteManagementController::class, 'changeStatus'])
         ->name('route-management.status');
@@ -81,7 +82,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/hero-banner/edit', [HeroBannerController::class, 'edit'])->name('hero-banner.edit');
     Route::match(['put', 'post'], '/hero-banner', [HeroBannerController::class, 'update'])->name('hero-banner.update');
 
-    // 6. Promotions Management (Resource ??????????????????? ????????????????)
+    // 6. Promotions Management
     Route::resource('promotions', PromotionController::class);
 
     // 7. Website Testimonials Management
