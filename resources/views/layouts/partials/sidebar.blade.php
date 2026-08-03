@@ -132,15 +132,15 @@
             <button type="button" onclick="toggleDropdown('navDropdown2', this)" class="nav-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8h18"/><path d="M8 12h8"/><path d="M8 16h8"/></svg>
                 Website
-                <svg class="dropdown-chevron ml-auto transition-transform duration-200" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                <svg class="dropdown-chevron ml-auto transition-transform duration-200 {{ request()->routeIs('admin.testimonials.*', 'admin.faqs.*', 'admin.subscriptions.*', 'admin.vision-mission.*') ? 'rotated' : '' }}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <div id="navDropdown2" class="hidden pl-9 pr-1 mt-1 space-y-1">
+            <div id="navDropdown2" class="{{ request()->routeIs('admin.testimonials.*', 'admin.faqs.*', 'admin.subscriptions.*', 'admin.vision-mission.*') ? '' : 'hidden' }} pl-9 pr-1 mt-1 space-y-1">
                 @php $websiteLinks = [
-                    'admin.website.vision' => 'Vision & Mission',
-                    'admin.website.blogs' => 'Blogs',
-                    'admin.website.subscriptions' => 'Subscriptions',
-                    'admin.website.faq' => 'FAQ',
-                    'admin.website.testimonials' => 'Testimonials',
+                    'admin.vision-mission.index' => 'Vision & Mission',
+                    'admin.blog.index' => 'Blogs',
+                    'admin.subscriptions.index' => 'Subscriptions',
+                    'admin.faqs.index' => 'FAQ',
+                    'admin.testimonials.index' => 'Testimonials',
                 ]; @endphp
                 @foreach ($websiteLinks as $routeName => $label)
                     @php $routeExists = Route::has($routeName); @endphp

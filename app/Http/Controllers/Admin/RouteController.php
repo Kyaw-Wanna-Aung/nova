@@ -5,26 +5,61 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Route;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RouteController extends Controller
 {
-    // 1. ခရီးစဉ်များစာရင်း Blade View ပြသရန်
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 10);
-        $routes = Route::latest()->paginate($perPage);
+        if (! in_array($perPage, [8, 10, 20, 50], true)) {
+            $perPage = 10;
+        }
+
+        $search = trim((string) $request->query('search', ''));
+        $sort = $request->query('sort', 'date');
+        $direction = $request->query('direction', 'desc');
+        $sortColumns = [
+            'category' => 'category',
+            'origin' => 'origin',
+            'destination' => 'destination',
+            'seats' => 'available_seats',
+            'date' => 'date',
+            'time' => 'time',
+            'price' => 'price',
+            'created' => 'created_at',
+        ];
+        $sortColumn = $sortColumns[$sort] ?? 'date';
+        $direction = $direction === 'asc' ? 'asc' : 'desc';
+
+        $category = $request->query('category', 'all');
+
+        $routes = Route::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('category', 'like', "%{$search}%")
+                        ->orWhere('origin', 'like', "%{$search}%")
+                        ->orWhere('destination', 'like', "%{$search}%");
+                });
+            })
+            ->when($category !== 'all', function ($query) use ($category) {
+                $query->where('category', $category);
+            })
+            ->orderBy($sortColumn, $direction)
+            ->orderBy('id')
+            ->paginate($perPage)
+            ->withQueryString();
 
         return view('admin.routes.index', compact('routes'));
     }
 
-    // 2. ခရီးစဉ်အသစ် ထည့်သွင်းသည့် Form Blade View ပြသရန်
     public function create()
     {
         return view('admin.routes.create');
     }
 
-    // 3. ခရီးစဉ်အသစ် သိမ်းဆည်းရန်
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'category'        => 'required|string|max:255',
@@ -39,23 +74,20 @@ class RouteController extends Controller
         Route::create($validated);
 
         return redirect()->route('admin.routes.index')
-                         ->with('success', 'ခရီးစဉ်အသစ် အောင်မြင်စွာ ဖန်တီးပြီးပါပြီ။');
+                         ->with('success', 'Route created successfully.');
     }
 
-    // 4. ခရီးစဉ် အသေးစိတ် Blade View ပြသရန်
     public function show(Route $route)
     {
         return view('admin.routes.show', compact('route'));
     }
 
-    // 5. ခရီးစဉ် ပြင်ဆင်သည့် Form Blade View ပြသရန်
     public function edit(Route $route)
     {
         return view('admin.routes.edit', compact('route'));
     }
 
-    // 6. ခရီးစဉ် ပြင်ဆင်ချက်များကို Update လုပ်ရန်
-    public function update(Request $request, Route $route)
+    public function update(Request $request, Route $route): RedirectResponse
     {
         $validated = $request->validate([
             'category'        => 'required|string|max:255',
@@ -70,15 +102,74 @@ class RouteController extends Controller
         $route->update($validated);
 
         return redirect()->route('admin.routes.index')
-                         ->with('success', 'ခရီးစဉ် အချက်အလက်များ ပြင်ဆင်ပြီးပါပြီ။');
+                         ->with('success', 'Route updated successfully.');
     }
 
-    // 7. ခရီးစဉ်ကို ဖျက်ရန်
-    public function destroy(Route $route)
+    public function destroy(Route $route): RedirectResponse
     {
         $route->delete();
 
         return redirect()->route('admin.routes.index')
-                         ->with('success', 'ခရီးစဉ်ကို ဖျက်ပြီးပါပြီ။');
+                         ->with('success', 'Route deleted successfully.');
+    }
+
+    public function bulk(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'ids'    => 'required|array|min:1',
+            'ids.*'  => 'integer|exists:routes,id',
+            'action' => 'required|string|in:Active,Inactive,Deleted',
+        ]);
+
+        $ids = $validated['ids'];
+        $action = $validated['action'];
+        $count = count($ids);
+
+        if ($action === 'Deleted') {
+            Route::query()->whereIn('id', $ids)->delete();
+            return back()->with('success', "{$count} route(s) deleted successfully.");
+        }
+
+        return back()->with('info', "Status action ({$action}) is not applicable to travel routes.");
+    }
+
+    public function export(Request $request): StreamedResponse
+    {
+        $filename = 'routes-'.now()->format('Y-m-d-His').'.csv';
+        $search = trim((string) $request->query('search', ''));
+
+        $query = Route::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('category', 'like', "%{$search}%")
+                        ->orWhere('origin', 'like', "%{$search}%")
+                        ->orWhere('destination', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('date', 'desc')
+            ->orderBy('time');
+
+        return response()->streamDownload(function () use ($query): void {
+            $stream = fopen('php://output', 'w');
+            fputcsv($stream, ['ID', 'Category', 'Origin', 'Destination', 'Seats', 'Date', 'Time', 'Price', 'Created']);
+
+            $query->chunkById(200, function ($routes) use ($stream): void {
+                foreach ($routes as $route) {
+                    fputcsv($stream, [
+                        $route->id,
+                        $route->category,
+                        $route->origin,
+                        $route->destination,
+                        $route->available_seats,
+                        optional($route->date)->format('Y-m-d'),
+                        $route->time,
+                        number_format((float) $route->price, 2),
+                        optional($route->created_at)->format('Y-m-d H:i'),
+                    ]);
+                }
+            });
+
+            fclose($stream);
+        }, $filename, ['Content-Type' => 'text/csv']);
     }
 }
