@@ -13,40 +13,43 @@
 
 @section('content')
     @php
-        $heroImage = $featuredPromotion?->image ? asset('storage/'.$featuredPromotion->image) : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
+        $heroImage = $heroBanner?->image ? asset('storage/'.$heroBanner->image) : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
     @endphp
     <section class="hero">
         <div class="container hero-grid">
             <div class="promo-card">
                 <div>
-                    <div class="promo-badge">🌿 Sustainable Travel</div>
-                    <h1>{{ $featuredPromotion?->title ?? 'No promotion currently available' }}</h1>
-                    <p>{{ $featuredPromotion?->description }}</p>
+                    <div class="promo-badge">🌿 {{ $heroBanner?->category ?? 'Sustainable Travel' }}</div>
+                    <h1>{{ $heroBanner?->title ?? 'No banner available' }}</h1>
+                    <p>{{ $heroBanner?->description }}</p>
                     <div class="features">
+                        @if($heroBanner?->badge_1_title)
                         <div class="feature">
                             <div class="icon">⚡</div>
                             <div>
-                                <h4>100% Electric</h4>
-                                <span>Zero Emissions</span>
+                                <h4>{{ $heroBanner->badge_1_title }}</h4>
+                                <span>{{ $heroBanner->badge_1_sub }}</span>
                             </div>
                         </div>
+                        @endif
+                        @if($heroBanner?->badge_2_title)
                         <div class="feature">
                             <div class="icon">🛋</div>
                             <div>
-                                <h4>Business Class</h4>
-                                <span>Ultimate Comfort</span>
+                                <h4>{{ $heroBanner->badge_2_title }}</h4>
+                                <span>{{ $heroBanner->badge_2_sub }}</span>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
-                {{-- routes.index အစား # သို့ ပြောင်းထားပါသည် --}}
-                <a href="#" class="claim-btn">Claim Discount</a>
+                <a href="#" class="claim-btn">{{ $heroBanner?->promo_code ? 'Code: ' . $heroBanner->promo_code : 'Claim Discount' }}</a>
             </div>
             <div class="hero-image">
-                <img src="{{ $heroImage }}" alt="{{ $featuredPromotion?->title ?? 'Nova Electric Vehicle' }}" />
+                <img src="{{ $heroImage }}" alt="{{ $heroBanner?->title ?? 'Nova Electric Vehicle' }}" />
                 <div class="image-overlay">
-                    <h3>{{ $featuredPromotion?->title ?? 'Sustainable Luxury' }}</h3>
-                    <p>{{ $featuredPromotion?->description }}</p>
+                    <h3>{{ $heroBanner?->card_title ?? 'Sustainable Luxury' }}</h3>
+                    <p>{{ $heroBanner?->card_description }}</p>
                 </div>
             </div>
         </div>
@@ -59,7 +62,6 @@
                     <h2>Seasonal Routes &amp; Deals</h2>
                     <p>Explore Myanmar's most iconic journeys with special seasonal rates.</p>
                 </div>
-                {{-- routes.index အစား # သို့ ပြောင်းထားပါသည် --}}
                 <a href="#" class="view-all">View All Routes →</a>
             </div>
             @foreach ($promotions as $promotion)

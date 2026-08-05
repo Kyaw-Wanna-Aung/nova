@@ -2,7 +2,6 @@
 
 // ⚠️ အရေးကြီး: Api အစား Admin Controller လမ်းကြောင်းများသို့ ပြောင်းလဲထားပါသည်
 use App\Http\Controllers\Admin\AdminAuthController;
-use App\Http\Controllers\Admin\RouteController;
 use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\PromotionController;
 use Illuminate\Support\Facades\Route;
@@ -41,14 +40,9 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
 */
 
 // Public: ခရီးစဉ်များကို မည်သူမဆို ကြည့်ရှုနိုင်မည်
-Route::get('/routes', [RouteController::class, 'index']);
-Route::get('/routes/{route}', [RouteController::class, 'show']);
 
 // Protected: Admin သာလျှင် ခရီးစဉ် သစ်/ပြင်/ဖျက် လုပ်နိုင်မည်
 Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
-    Route::post('/routes', [RouteController::class, 'store']);
-    Route::put('/routes/{route}', [RouteController::class, 'update']);
-    Route::delete('/routes/{route}', [RouteController::class, 'destroy']);
 });
 
 /*

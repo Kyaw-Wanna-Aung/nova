@@ -1,6 +1,6 @@
 <header>
     <div class="container navbar">
-        <div class="logo">Nova <span>Mobility</span></div>
+        <a href="{{ route('home') }}" class="logo"><img src="{{ asset('image/logo.png') }}" alt="Nova Mobility"></a>
         <nav><ul>
             <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
             <li><a href="{{ route('our-routes') }}" class="{{ request()->routeIs('our-routes') ? 'active' : '' }}">Our Routes</a></li>

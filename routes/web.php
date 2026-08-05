@@ -63,13 +63,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     // 2. Admin Management
     Route::get('/register', [AdminAuthController::class, 'showRegisterForm'])->name('register.form');
     Route::post('/register', [AdminAuthController::class, 'registerAdmin'])->name('register');
-
-    // 3. Routes Management (Resource + export, bulk)
-    Route::resource('routes', RouteController::class);
-    Route::post('/routes/bulk', [RouteController::class, 'bulk'])->name('routes.bulk');
-    Route::get('/routes-export', [RouteController::class, 'export'])->name('routes.export');
-
-    // 4. Route Management Module (route-management)
+    // 3. Route Management Module (route-management)
     Route::resource('route-management', RouteManagementController::class)->except(['create', 'show']);
     Route::patch('/route-management/{routeManagement}/status', [RouteManagementController::class, 'changeStatus'])
         ->name('route-management.status');
@@ -78,7 +72,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/route-management-export', [RouteManagementController::class, 'export'])
         ->name('route-management.export');
 
-    // 5. Hero Banner Management
+    // 4. Hero Banner Management
     Route::get('/hero-banner/edit', [HeroBannerController::class, 'edit'])->name('hero-banner.edit');
     Route::match(['put', 'post'], '/hero-banner', [HeroBannerController::class, 'update'])->name('hero-banner.update');
 

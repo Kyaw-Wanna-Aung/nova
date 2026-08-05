@@ -7,6 +7,7 @@ use App\Models\RouteManagement;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RouteManagementController extends Controller
@@ -18,10 +19,9 @@ class RouteManagementController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        RouteManagement::create($this->validatedData($request));
+        RouteManagement::create($this->routeData($request));
 
-        return redirect()->route('admin.route-management.index')
-            ->with('success', 'Route created successfully.');
+        return redirect()->route('admin.route-management.index')->with('success', 'Route created successfully.');
     }
 
     public function edit(Request $request, RouteManagement $routeManagement): View
@@ -31,18 +31,16 @@ class RouteManagementController extends Controller
 
     public function update(Request $request, RouteManagement $routeManagement): RedirectResponse
     {
-        $routeManagement->update($this->validatedData($request));
+        $routeManagement->update($this->routeData($request, $routeManagement));
 
-        return redirect()->route('admin.route-management.index')
-            ->with('success', 'Route updated successfully.');
+        return redirect()->route('admin.route-management.index')->with('success', 'Route updated successfully.');
     }
 
     public function destroy(RouteManagement $routeManagement): RedirectResponse
     {
         $routeManagement->delete();
 
-        return redirect()->route('admin.route-management.index')
-            ->with('success', 'Route deleted successfully.');
+        return redirect()->route('admin.route-management.index')->with('success', 'Route deleted successfully.');
     }
 
     public function changeStatus(Request $request, RouteManagement $routeManagement): RedirectResponse
@@ -62,113 +60,91 @@ class RouteManagementController extends Controller
         ]);
 
         $routes = RouteManagement::query()->whereIn('id', $data['ids']);
-
-        if ($data['action'] === 'delete') {
-            $routes->delete();
-        } elseif ($data['action'] === 'active') {
-            $routes->update(['status' => 'Active']);
-        } else {
-            $routes->update(['status' => 'Inactive']);
-        }
+        match ($data['action']) {
+            'delete' => $routes->delete(),
+            'active' => $routes->update(['status' => 'Active']),
+            default => $routes->update(['status' => 'Inactive']),
+        };
 
         return back()->with('success', 'Bulk action completed successfully.');
     }
 
     public function export(Request $request): StreamedResponse
     {
-        $filename = 'route-management-'.now()->format('Y-m-d-His').'.csv';
-        $query = $this->filteredQuery($request)->orderBy('name');
-
-        return response()->streamDownload(function () use ($query): void {
+        return response()->streamDownload(function () use ($request): void {
             $stream = fopen('php://output', 'w');
-            fputcsv($stream, ['Route', 'Origin', 'Destination', 'Distance (km)', 'Type', 'Status', 'Created']);
-
-            $query->chunkById(200, function ($routes) use ($stream): void {
+            fputcsv($stream, ['Route', 'From', 'To', 'Category', 'Seats', 'Departure date', 'Departure time', 'Fare', 'Status']);
+            $this->filteredQuery($request)->orderBy('departure_date')->chunkById(200, function ($routes) use ($stream): void {
                 foreach ($routes as $route) {
-                    fputcsv($stream, [
-                        $route->name,
-                        $route->origin,
-                        $route->destination,
-                        $route->distance,
-                        $route->type,
-                        $route->status,
-                        $route->created_at?->format('Y-m-d'),
-                    ]);
+                    fputcsv($stream, [$route->name, $route->from_location, $route->to_location, $route->category, $route->available_seats, $route->departure_date?->format('Y-m-d'), $route->departure_time, $route->fare, $route->status]);
                 }
             });
-
             fclose($stream);
-        }, $filename, ['Content-Type' => 'text/csv']);
+        }, 'route-management-'.now()->format('Y-m-d-His').'.csv', ['Content-Type' => 'text/csv']);
     }
 
     private function indexData(Request $request, ?RouteManagement $selectedRoute = null): array
     {
         $sort = $request->query('sort', 'name');
-        $direction = $request->query('direction', 'asc');
-        $sortColumns = [
-            'name' => 'name',
-            'origin' => 'origin',
-            'destination' => 'destination',
-            'distance' => 'distance',
-            'status' => 'status',
-            'created' => 'created_at',
-        ];
-        $sortColumn = $sortColumns[$sort] ?? 'name';
-        $direction = $direction === 'desc' ? 'desc' : 'asc';
-        $perPage = (int) $request->query('per_page', 10);
-        if (! in_array($perPage, [8, 10, 20, 50], true)) {
-            $perPage = 10;
-        }
-
-        $routes = $this->filteredQuery($request)
-            ->orderBy($sortColumn, $direction)
-            ->orderBy('id')
-            ->paginate($perPage)
-            ->withQueryString();
+        $sortColumn = [
+            'name' => 'name', 'origin' => 'from_location', 'destination' => 'to_location',
+            'distance' => 'distance', 'status' => 'status', 'created' => 'created_at',
+        ][$sort] ?? 'name';
+        $direction = $request->query('direction') === 'desc' ? 'desc' : 'asc';
+        $perPage = in_array((int) $request->query('per_page', 10), [8, 10, 20, 50], true) ? (int) $request->query('per_page', 10) : 10;
 
         return [
-            'routes' => $routes,
+            'routes' => $this->filteredQuery($request)->orderBy($sortColumn, $direction)->orderBy('id')->paginate($perPage)->withQueryString(),
             'selectedRoute' => $selectedRoute,
             'stats' => [
                 'total' => RouteManagement::count(),
-                'active' => RouteManagement::query()->where('status', 'Active')->count(),
-                'inactive' => RouteManagement::query()->where('status', 'Inactive')->count(),
-                'pending' => RouteManagement::query()->where('status', 'Pending')->count(),
+                'active' => RouteManagement::where('status', 'Active')->count(),
+                'inactive' => RouteManagement::where('status', 'Inactive')->count(),
+                'pending' => RouteManagement::where('status', 'Pending')->count(),
             ],
-            'sort' => $sort,
-            'direction' => $direction,
-            'perPage' => $perPage,
+            'sort' => $sort, 'direction' => $direction, 'perPage' => $perPage,
         ];
     }
 
     private function filteredQuery(Request $request)
     {
         $search = trim((string) $request->query('search', ''));
-        $status = $request->query('status');
-        $type = $request->query('type');
 
         return RouteManagement::query()
-            ->when($search !== '', function ($query) use ($search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('origin', 'like', "%{$search}%")
-                        ->orWhere('destination', 'like', "%{$search}%");
-                });
-            })
-            ->when(in_array($status, ['Active', 'Inactive', 'Pending'], true), fn ($query) => $query->where('status', $status))
-            ->when(in_array($type, ['City', 'Regional', 'Express'], true), fn ($query) => $query->where('type', $type));
+            ->when($search !== '', fn ($query) => $query->where(fn ($query) => $query->where('name', 'like', "%{$search}%")->orWhere('from_location', 'like', "%{$search}%")->orWhere('to_location', 'like', "%{$search}%")->orWhere('origin', 'like', "%{$search}%")->orWhere('destination', 'like', "%{$search}%")))
+            ->when(in_array($request->query('status'), ['Active', 'Inactive', 'Pending'], true), fn ($query) => $query->where('status', $request->query('status')))
+            ->when(in_array($request->query('category'), ['Nova Executive', 'Nova Space+', 'Nova Signature'], true), fn ($query) => $query->where('category', $request->query('category')));
     }
 
-    private function validatedData(Request $request): array
+    private function routeData(Request $request, ?RouteManagement $routeManagement = null): array
     {
-        return $request->validate([
-            'name' => ['required', 'string', 'max:255', 'min:3'],
-            'origin' => ['required', 'string', 'max:255', 'min:2'],
-            'destination' => ['required', 'string', 'max:255', 'min:2'],
-            'distance' => ['required', 'numeric', 'min:1'],
-            'type' => ['required', 'in:City,Regional,Express'],
+        $data = $request->validate([
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'from_location' => ['required', 'string', 'min:2', 'max:255'],
+            'to_location' => ['required', 'string', 'min:2', 'max:255'],
+            'distance' => ['nullable', 'numeric', 'min:0'],
+            'category' => ['required', 'in:Nova Executive,Nova Space+,Nova Signature'],
+            'available_seats' => ['required', 'integer', 'min:0'],
+            'departure_date' => ['required', 'date'],
+            'departure_time' => ['required', 'date_format:H:i'],
+            'fare' => ['required', 'numeric', 'min:0'],
+            'image' => ['nullable', 'image', 'max:5120'],
             'status' => ['required', 'in:Active,Inactive,Pending'],
             'description' => ['nullable', 'string', 'max:5000'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('routes', 'public');
+        } elseif ($routeManagement !== null) {
+            $data['image'] = $routeManagement->image;
+        }
+
+        // Retain legacy columns only to keep records created before this migration readable.
+        $data['origin'] = $data['from_location'];
+        $data['destination'] = $data['to_location'];
+        $data['type'] = $data['category'];
+        $data['distance'] = $data['distance'] ?? 0;
+
+        return $data;
     }
 }

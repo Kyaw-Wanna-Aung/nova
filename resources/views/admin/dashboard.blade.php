@@ -44,7 +44,7 @@
     <p class="text-gray-600 text-sm mb-4">
         ဘေးဘက် Sidebar Menu မှတစ်ဆင့် **Routes (ခရီးစဉ်များ)**၊ **Promotions (ပရိုမိုးရှင်းများ)** နှင့် **Hero Banner** အချက်အလက်များကို လွယ်ကူစွာ စီမံခန့်ခွဲနိုင်ပါသည်။
     </p>
-    <a href="{{ route('admin.routes.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition">
+    <a href="{{ route('admin.route-management.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition">
         Manage Routes →
     </a>
 </div>

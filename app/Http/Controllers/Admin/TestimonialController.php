@@ -7,6 +7,7 @@ use App\Models\Testimonial;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TestimonialController extends Controller
 {
@@ -21,6 +22,10 @@ class TestimonialController extends Controller
         $data['status'] = $data['status'] ?? 'Active';
         $data['display_order'] = $data['display_order'] ?? $this->nextDisplayOrder();
 
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('testimonials', 'public');
+        }
+
         Testimonial::create($data);
 
         return redirect()->route('admin.testimonials.index')
@@ -34,7 +39,14 @@ class TestimonialController extends Controller
 
     public function update(Request $request, Testimonial $testimonial): RedirectResponse
     {
-        $testimonial->update($this->validatedData($request));
+        $data = $this->validatedData($request);
+
+        if ($request->hasFile('image')) {
+            $this->deleteImage($testimonial);
+            $data['image'] = $request->file('image')->store('testimonials', 'public');
+        }
+
+        $testimonial->update($data);
 
         return redirect()->route('admin.testimonials.index')
             ->with('success', 'Testimonial updated successfully.');
@@ -42,6 +54,7 @@ class TestimonialController extends Controller
 
     public function destroy(Testimonial $testimonial): RedirectResponse
     {
+        $this->deleteImage($testimonial);
         $testimonial->delete();
 
         return redirect()->route('admin.testimonials.index')
@@ -73,7 +86,10 @@ class TestimonialController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return compact('testimonials', 'selectedTestimonial', 'search');
+        // Live Preview အတွက် Active ဖြစ်နေသော Testimonial များကို ထည့်ပေးခြင်း
+        $active = Testimonial::where('status', 'Active')->orderBy('display_order')->get();
+
+        return compact('testimonials', 'selectedTestimonial', 'search', 'active');
     }
 
     private function validatedData(Request $request): array
@@ -81,6 +97,7 @@ class TestimonialController extends Controller
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'role' => ['required', 'string', 'max:255'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'message' => ['required', 'string', 'max:2000'],
             'rating' => ['required', 'integer', 'between:1,5'],
             'status' => ['nullable', 'in:Active,Inactive'],
@@ -91,5 +108,12 @@ class TestimonialController extends Controller
     private function nextDisplayOrder(): int
     {
         return (int) Testimonial::max('display_order') + 1;
+    }
+
+    private function deleteImage(Testimonial $testimonial): void
+    {
+        if ($testimonial->image && Storage::disk('public')->exists($testimonial->image)) {
+            Storage::disk('public')->delete($testimonial->image);
+        }
     }
 }

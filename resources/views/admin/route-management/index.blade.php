@@ -7,7 +7,7 @@
 @section('content')
 
     @php
-        $queryParameters = request()->only(['search', 'status', 'type', 'sort', 'direction', 'per_page']);
+        $queryParameters = request()->only(['search', 'status', 'category', 'sort', 'direction', 'per_page']);
         $statusStyles = ['Active' => 'bg-emerald-50 text-emerald-600', 'Inactive' => 'bg-rose-50 text-rose-600', 'Pending' => 'bg-amber-50 text-amber-600'];
         $typeStyles = ['City' => 'bg-slate-100 text-slate-600', 'Regional' => 'bg-[#E9F2FC] text-[var(--navy)]', 'Express' => 'bg-[#EAEAF9] text-[#1D2B62]'];
         $selectedIds = old('ids', []) ?? [];
@@ -63,11 +63,11 @@
                     <option value="Inactive" {{ request('status') === 'Inactive' ? 'selected' : '' }}>Inactive</option>
                     <option value="Pending" {{ request('status') === 'Pending' ? 'selected' : '' }}>Pending</option>
                 </select>
-                <select name="type" class="text-sm border border-slate-200 rounded-lg px-3 py-2.5 outline-none text-slate-600 bg-white">
-                    <option value="all" {{ request('type') === null || request('type') === 'all' ? 'selected' : '' }}>All types</option>
-                    <option value="City" {{ request('type') === 'City' ? 'selected' : '' }}>City</option>
-                    <option value="Regional" {{ request('type') === 'Regional' ? 'selected' : '' }}>Regional</option>
-                    <option value="Express" {{ request('type') === 'Express' ? 'selected' : '' }}>Express</option>
+                <select name="category" class="text-sm border border-slate-200 rounded-lg px-3 py-2.5 outline-none text-slate-600 bg-white">
+                    <option value="all" {{ request('category') === null || request('category') === 'all' ? 'selected' : '' }}>All categories</option>
+                    <option value="Nova Executive" {{ request('category') === 'Nova Executive' ? 'selected' : '' }}>Nova Executive</option>
+                    <option value="Nova Space+" {{ request('category') === 'Nova Space+' ? 'selected' : '' }}>Nova Space+</option>
+                    <option value="Nova Signature" {{ request('category') === 'Nova Signature' ? 'selected' : '' }}>Nova Signature</option>
                 </select>
                 <a href="{{ route('admin.route-management.index') }}" class="text-sm font-medium text-slate-400 hover:text-[var(--navy)] px-2">Clear</a>
             </div>
@@ -182,12 +182,17 @@
                                             onclick="editRoute({{ htmlspecialchars(json_encode([
                                                 'id' => $route->id,
                                                 'name' => $route->name,
-                                                'origin' => $route->origin,
-                                                'destination' => $route->destination,
+                                                'from_location' => $route->from_location,
+                                                'to_location' => $route->to_location,
                                                 'distance' => $route->distance,
-                                                'type' => $route->type,
+                                                'category' => $route->category,
                                                 'status' => $route->status,
                                                 'created' => optional($route->created_at)->format('Y-m-d'),
+                                                'description' => $route->description,
+                                                'available_seats' => $route->available_seats,
+                                                'fare' => $route->fare,
+                                                'departure_date' => optional($route->departure_date)->format('Y-m-d'),
+                                                'departure_time' => $route->departure_time,
                                             ])) }})"
                                             class="p-1.5 rounded-lg text-slate-400 hover:text-[var(--navy)] hover:bg-slate-100" title="Edit">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
@@ -305,19 +310,19 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label for="routeOrigin" class="text-sm font-medium text-slate-600">Origin</label>
-                            <input id="routeOrigin" name="origin" type="text" placeholder="Downtown"
-                                   class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none @error('origin') border-rose-400 @enderror"
-                                   value="{{ old('origin', $selectedRoute->origin ?? '') }}" />
-                            @error('origin')
+                            <input id="routeOrigin" name="from_location" type="text" placeholder="Downtown"
+                                   class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none @error('from_location') border-rose-400 @enderror"
+                                   value="{{ old('from_location', $selectedRoute->from_location ?? '') }}" />
+                            @error('from_location')
                                 <p class="text-xs text-rose-500 mt-1.5">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label for="routeDestination" class="text-sm font-medium text-slate-600">Destination</label>
-                            <input id="routeDestination" name="destination" type="text" placeholder="Airport"
-                                   class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none @error('destination') border-rose-400 @enderror"
-                                   value="{{ old('destination', $selectedRoute->destination ?? '') }}" />
-                            @error('destination')
+                            <input id="routeDestination" name="to_location" type="text" placeholder="Airport"
+                                   class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none @error('to_location') border-rose-400 @enderror"
+                                   value="{{ old('to_location', $selectedRoute->to_location ?? '') }}" />
+                            @error('to_location')
                                 <p class="text-xs text-rose-500 mt-1.5">{{ $message }}</p>
                             @enderror
                         </div>
@@ -334,17 +339,24 @@
                         </div>
                         <div>
                             <label for="routeType" class="text-sm font-medium text-slate-600">Route type</label>
-                            <select id="routeType" name="type" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-white @error('type') border-rose-400 @enderror">
-                                <option value="City" {{ (old('type', $selectedRoute->type ?? 'City') === 'City') ? 'selected' : '' }}>City</option>
-                                <option value="Regional" {{ (old('type', $selectedRoute->type ?? '') === 'Regional') ? 'selected' : '' }}>Regional</option>
-                                <option value="Express" {{ (old('type', $selectedRoute->type ?? '') === 'Express') ? 'selected' : '' }}>Express</option>
+                            <select id="routeType" name="category" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-white @error('category') border-rose-400 @enderror">
+                                <option value="Nova Executive" @selected(old('category', $selectedRoute->category ?? 'Nova Executive') === 'Nova Executive')>Nova Executive</option>
+                                <option value="Nova Space+" @selected(old('category', $selectedRoute->category ?? '') === 'Nova Space+')>Nova Space+</option>
+                                <option value="Nova Signature" @selected(old('category', $selectedRoute->category ?? '') === 'Nova Signature')>Nova Signature</option>
                             </select>
-                            @error('type')
+                            @error('category')
                                 <p class="text-xs text-rose-500 mt-1.5">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
+                        <div><label for="routeSeats" class="text-sm font-medium text-slate-600">Available seats</label><input id="routeSeats" name="available_seats" type="number" min="0" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none" value="{{ old('available_seats', $selectedRoute->available_seats ?? '') }}" /></div>
+                        <div><label for="routeFare" class="text-sm font-medium text-slate-600">Fare (MMK)</label><input id="routeFare" name="fare" type="number" min="0" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none" value="{{ old('fare', $selectedRoute->fare ?? '') }}" /></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label for="routeDepartureDate" class="text-sm font-medium text-slate-600">Departure date</label><input id="routeDepartureDate" name="departure_date" type="date" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none" value="{{ old('departure_date', optional($selectedRoute->departure_date ?? null)->format('Y-m-d')) }}" /></div>
+                        <div><label for="routeDepartureTime" class="text-sm font-medium text-slate-600">Departure time</label><input id="routeDepartureTime" name="departure_time" type="time" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none" value="{{ old('departure_time', $selectedRoute->departure_time ?? '') }}" /></div>
+                    </div>                    <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label for="routeStatus" class="text-sm font-medium text-slate-600">Status</label>
                             <select id="routeStatus" name="status" class="input-field mt-1.5 w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-white @error('status') border-rose-400 @enderror">
@@ -431,6 +443,10 @@
         document.getElementById('routeDistance').value = '';
         document.getElementById('routeType').value = 'City';
         document.getElementById('routeStatus').value = 'Active';
+        document.getElementById('routeSeats').value = '';
+        document.getElementById('routeFare').value = '';
+        document.getElementById('routeDepartureDate').value = '';
+        document.getElementById('routeDepartureTime').value = '';
         document.getElementById('routeCreated').value = '';
         document.getElementById('routeDescription').value = '';
         formMethod.value = 'POST';
@@ -448,12 +464,17 @@
 
     function editRoute(route) {
         document.getElementById('routeName').value = route.name;
-        document.getElementById('routeOrigin').value = route.origin;
-        document.getElementById('routeDestination').value = route.destination;
+        document.getElementById('routeOrigin').value = route.from_location;
+        document.getElementById('routeDestination').value = route.to_location;
         document.getElementById('routeDistance').value = route.distance;
-        document.getElementById('routeType').value = route.type;
+        document.getElementById('routeType').value = route.category;
         document.getElementById('routeStatus').value = route.status;
+        document.getElementById('routeSeats').value = route.available_seats || '';
+        document.getElementById('routeFare').value = route.fare || '';
+        document.getElementById('routeDepartureDate').value = route.departure_date || '';
+        document.getElementById('routeDepartureTime').value = route.departure_time || '';
         document.getElementById('routeCreated').value = route.created || '';
+        document.getElementById('routeDescription').value = route.description || '';
 
         routeForm.action = `${editBaseUrl}/${route.id}`;
         formMethod.value = 'PUT';
@@ -514,12 +535,13 @@
                 editRoute({!! json_encode([
                     'id' => $selectedRoute->id,
                     'name' => old('name', $selectedRoute->name),
-                    'origin' => old('origin', $selectedRoute->origin),
-                    'destination' => old('destination', $selectedRoute->destination),
+                    'from_location' => old('from_location', $selectedRoute->from_location),
+                    'to_location' => old('to_location', $selectedRoute->to_location),
                     'distance' => old('distance', $selectedRoute->distance),
-                    'type' => old('type', $selectedRoute->type),
+                    'category' => old('category', $selectedRoute->category),
                     'status' => old('status', $selectedRoute->status),
                     'created' => old('created_display', optional($selectedRoute->created_at)->format('Y-m-d')),
+                    'description' => old('description', $selectedRoute->description),
                 ]) !!});
             @else
                 resetToAdd();
