@@ -4,7 +4,82 @@
 
 @push('styles')
 <style>
-body{background:#f3f4f6;color:#1f2937}.logo span{color:#53a7db}.hero{background:linear-gradient(135deg,#0b4b73,#1d5f90,#2b6da0);color:#fff;padding:90px 0 120px;text-align:center;margin:0;border-radius:0;height:auto}.hero h1{font-size:64px;line-height:1.08;font-weight:800;max-width:900px;margin:0 auto 22px}.hero p{color:#d7e7f5;font-size:20px;max-width:760px;margin:0 auto}.search-card{background:#fff;border-radius:24px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.12);margin-top:-60px;position:relative;z-index:2}.search-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:16px;align-items:end}.field label{display:block;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:8px}.field input,.field select{width:100%;padding:16px;border:1px solid #d1d5db;border-radius:14px;background:#f8fafc;font-size:15px;outline:none}.search-btn{background:#0b4b73;color:#fff;border:0;padding:16px 26px;border-radius:14px;font-weight:700;min-width:170px}.section{padding:80px 0}.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:30px}.section-head h2,.steps-head h2,.testimonials h2,.cta-box h2{color:#0b4b73;font-size:48px;line-height:1.1}.section-head p,.steps-head p,.step p,.cta-box p{color:#6b7280;margin-top:10px}.trip-grid,.steps-grid,.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.trip-card,.testimonial{background:#fff;border:1px solid #e5e7eb;border-radius:22px;padding:24px;box-shadow:0 10px 24px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:14px}.trip-top{display:flex;justify-content:space-between;color:#0b4b73;font-size:12px;font-weight:700;text-transform:uppercase}.trip-card h3{color:#0b4b73;font-size:28px}.trip-meta{color:#6b7280;font-size:14px;display:grid;gap:6px}.trip-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px}.fare small{display:block;color:#6b7280;text-transform:uppercase}.fare strong{font-size:30px;color:#0b4b73}.arrow{width:44px;height:44px;border-radius:50%;background:#eef2f7;display:flex;align-items:center;justify-content:center;color:#0b4b73;font-weight:700}.steps{background:#fff}.steps-head{text-align:center;margin-bottom:48px}.eyebrow{display:inline-block;color:#0b4b73;font-size:12px;font-weight:700;text-transform:uppercase}.step{text-align:center;padding:12px}.step .icon,.cta-box .icon{width:72px;height:72px;border-radius:18px;background:#eaf3fb;color:#0b4b73;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 18px}.step h3{color:#0b4b73;font-size:24px}.testimonials h2{text-align:center;margin-bottom:34px}.testimonial p{color:#4b5563;font-style:italic}.testimonial-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.stars{font-size:22px;color:#2563eb;letter-spacing:2px;line-height:1}.stars .empty-star{opacity:.25;color:#93c5fd}.rating-badge{background:#f3f4f6;color:#374151;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;min-width:32px;text-align:center;display:inline-block;border:1px solid #e5e7eb}.person{display:flex;gap:14px;align-items:center;margin-top:auto}.avatar{width:52px;height:52px;border-radius:50%;background:#dbeafe;display:grid;place-items:center;color:#0b4b73;font-weight:800}.name{color:#0b4b73;font-weight:700}.cta{background:#fff}.cta-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:30px;padding:56px;text-align:center}.cta-actions{display:flex;justify-content:center;gap:16px}.btn-outline{border:2px solid #0b4b73;color:#0b4b73;padding:14px 24px;border-radius:12px;font-weight:700;background:#fff}@media(max-width:992px){.hero h1{font-size:44px}.search-grid,.trip-grid,.steps-grid,.testimonial-grid{grid-template-columns:1fr}.section-head{flex-direction:column;align-items:flex-start}.section-head h2,.steps-head h2,.testimonials h2,.cta-box h2{font-size:36px}}@media(max-width:576px){.hero{padding:64px 0 100px}.hero h1{font-size:34px}.search-card{margin-top:-48px;padding:18px}.cta-box{padding:34px}}
+body{background:#f3f4f6;color:#1f2937}
+.logo span{color:#53a7db}
+.hero{background:linear-gradient(135deg,#0b4b73,#1d5f90,#2b6da0);color:#fff;padding:90px 0 320px;text-align:center;margin:0;border-radius:0;height:auto}
+.hero h1{font-size:64px;line-height:1.08;font-weight:800;max-width:900px;margin:0 auto 22px}
+.hero p{color:#d7e7f5;font-size:20px;max-width:760px;margin:0 auto}
+
+/* Container width restriction for content sections so they aren't too wide */
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+.search-card{background:#fff;border-radius:24px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.12);margin:-230px auto 0;position:relative;z-index:2;max-width:1200px}
+.search-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:16px;align-items:end}
+.field label{display:block;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:8px}
+.field input,.field select{width:100%;padding:16px;border:1px solid #d1d5db;border-radius:14px;background:#f8fafc;font-size:15px;outline:none}
+.search-btn{background:#0b4b73;color:#fff;border:0;padding:16px 26px;border-radius:14px;font-weight:700;min-width:170px;cursor:pointer}
+
+/* Balanced section padding and width */
+.section{padding:80px 0;    padding-top: 120px;}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:30px}
+.section-head h2,.steps-head h2,.testimonials h2,.cta-box h2{color:#0b4b73;font-size:40px;line-height:1.1}
+.section-head p,.steps-head p,.step p,.cta-box p{color:#6b7280;margin-top:10px}
+
+.trip-grid,.steps-grid,.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.trip-card,.testimonial{background:#fff;border:1px solid #e5e7eb;border-radius:22px;padding:24px;box-shadow:0 10px 24px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:14px}
+.trip-top{display:flex;justify-content:space-between;color:#0b4b73;font-size:12px;font-weight:700;text-transform:uppercase}
+.trip-card h3{color:#0b4b73;font-size:24px}
+.trip-meta{color:#6b7280;font-size:14px;display:grid;gap:6px}
+.trip-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.fare small{display:block;color:#6b7280;text-transform:uppercase}
+.fare strong{font-size:26px;color:#0b4b73}
+.arrow{width:40px;height:40px;border-radius:50%;background:#eef2f7;display:flex;align-items:center;justify-content:center;color:#0b4b73;font-weight:700}
+
+.steps{background:#fff}
+.steps-head{text-align:center;margin-bottom:40px}
+.eyebrow{display:inline-block;color:#0b4b73;font-size:12px;font-weight:700;text-transform:uppercase}
+.step{text-align:center;padding:16px;background:#fff;border:1px solid #e5e7eb;border-radius:20px;box-shadow:0 5px 15px rgba(0,0,0,.03)}
+.step .icon,.cta-box .icon{width:64px;height:64px;border-radius:18px;background:#eaf3fb;color:#0b4b73;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
+.step h3{color:#0b4b73;font-size:20px}
+
+.testimonials h2{text-align:center;margin-bottom:34px}
+.testimonial p{color:#4b5563;font-style:italic;font-size:15px}
+.testimonial-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.stars{font-size:20px;color:#2563eb;letter-spacing:2px;line-height:1}
+.stars .empty-star{opacity:.25;color:#93c5fd}
+.rating-badge{background:#f3f4f6;color:#374151;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;min-width:32px;text-align:center;display:inline-block;border:1px solid #e5e7eb}
+.person{display:flex;gap:14px;align-items:center;margin-top:auto}
+.avatar{width:48px;height:48px;border-radius:50%;background:#dbeafe;display:grid;place-items:center;color:#0b4b73;font-weight:800}
+.name{color:#0b4b73;font-weight:700;font-size:15px}
+
+.cta{background:#fff}
+.cta-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:30px;padding:48px 24px;text-align:center;max-width:900px;margin:0 auto}
+.cta-actions{display:flex;justify-content:center;gap:16px;margin-top:20px}
+.btn,.btn-outline{display:inline-block;padding:14px 28px;border-radius:12px;font-weight:700;text-decoration:none}
+.btn{background:#0b4b73;color:#fff}
+.btn-outline{border:2px solid #0b4b73;color:#0b4b73;background:#fff}
+
+/* Responsive Media Queries */
+@media(max-width:1024px){
+    .steps-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:992px){
+    .hero h1{font-size:40px}
+    .hero p{font-size:16px}
+    .search-grid,.trip-grid,.testimonial-grid{grid-template-columns:1fr}
+    .section-head{flex-direction:column;align-items:flex-start}
+    .section-head h2,.steps-head h2,.testimonials h2,.cta-box h2{font-size:32px}
+}
+@media(max-width:768px){
+    .steps-grid{grid-template-columns:1fr}
+}
+@media(max-width:576px){
+    .hero{padding:64px 0 160px}
+    .hero h1{font-size:28px}
+    .search-card{margin-top:-100px;padding:16px}
+    .cta-box{padding:30px 16px}
+    .cta-actions{flex-direction:column}
+}
 </style>
 @endpush
 
@@ -15,37 +90,41 @@ body{background:#f3f4f6;color:#1f2937}.logo span{color:#53a7db}.hero{background:
         <p>Experience the future of travel with our state-of-the-art electric fleet. Ride-pooling redefined for comfort, sustainability, and absolute reliability.</p>
     </div>
 </section>
-<section class="container search-card">
-    <form method="GET" class="search-grid">
-        <div class="field">
-            <label>From</label>
-            <select name="from">
-                <option value="">Any departure</option>
-                @foreach($origins as $origin)
-                    <option value="{{ $origin }}" @selected(request('from')===$origin)>{{ $origin }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="field">
-            <label>To</label>
-            <select name="to">
-                <option value="">Any destination</option>
-                @foreach($destinations as $destination)
-                    <option value="{{ $destination }}" @selected(request('to')===$destination)>{{ $destination }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="field">
-            <label>Date</label>
-            <input type="date" name="date" value="{{ request('date') }}">
-        </div>
-        <div class="field">
-            <label>Passengers</label>
-            <input type="number" min="1" name="passengers" value="{{ request('passengers') }}" placeholder="Passengers">
-        </div>
-        <button class="search-btn">Search Trip</button>
-    </form>
-</section>
+
+<div class="container">
+    <section class="search-card">
+        <form method="GET" class="search-grid">
+            <div class="field">
+                <label>From</label>
+                <select name="from">
+                    <option value="">Any departure</option>
+                    @foreach($origins as $origin)
+                        <option value="{{ $origin }}" @selected(request('from')===$origin)>{{ $origin }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="field">
+                <label>To</label>
+                <select name="to">
+                    <option value="">Any destination</option>
+                    @foreach($destinations as $destination)
+                        <option value="{{ $destination }}" @selected(request('to')===$destination)>{{ $destination }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="field">
+                <label>Date</label>
+                <input type="date" name="date" value="{{ request('date') }}">
+            </div>
+            <div class="field">
+                <label>Passengers</label>
+                <input type="number" min="1" name="passengers" value="{{ request('passengers') }}" placeholder="Passengers">
+            </div>
+            <button class="search-btn">Search Trip</button>
+        </form>
+    </section>
+</div>
+
 <section class="section">
     <div class="container">
         <div class="section-head">
@@ -80,6 +159,7 @@ body{background:#f3f4f6;color:#1f2937}.logo span{color:#53a7db}.hero{background:
         </div>
     </div>
 </section>
+
 <section class="section steps">
     <div class="container">
         <div class="steps-head">
@@ -105,6 +185,7 @@ body{background:#f3f4f6;color:#1f2937}.logo span{color:#53a7db}.hero{background:
         </div>
     </div>
 </section>
+
 <section class="section testimonials">
     <div class="container">
         <h2>Trusted by Thousands</h2>
@@ -142,6 +223,7 @@ body{background:#f3f4f6;color:#1f2937}.logo span{color:#53a7db}.hero{background:
         </div>
     </div>
 </section>
+
 <section class="section cta">
     <div class="container">
         <div class="cta-box">

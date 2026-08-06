@@ -26,6 +26,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/download-app', [HomeController::class, 'downloadApp'])->name('download-app');
 Route::get('/support', [HomeController::class, 'support'])->name('support');
 Route::get('/blog', [UserBlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/all', [UserBlogController::class, 'all'])->name('blog.all');
 Route::get('/blog/{blog:slug}', [UserBlogController::class, 'show'])->name('blog.show');
 Route::get('/our-routes', [UserRouteController::class, 'index'])->name('our-routes');
 
@@ -102,6 +103,4 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 
     // 11. Website Blog Management
     Route::resource('blog', AdminBlogController::class)->except(['create', 'show']);
-    Route::patch('/blog/{blog}/status', [AdminBlogController::class, 'changeStatus'])->name('blog.status');
-    Route::patch('/blog/{blog}/hero', [AdminBlogController::class, 'toggleHero'])->name('blog.hero');
 });
