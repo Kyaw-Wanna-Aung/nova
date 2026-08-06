@@ -9,7 +9,7 @@ body{background:#f7fafc}
 .insights-hero h1{font-size:56px;line-height:1.15;letter-spacing:-0.02em;margin:0 0 20px;color:#0b4b73;font-weight:800;max-width:1000px}
 .insights-hero p{max-width:760px;color:#373333;font-size:16px;font-weight:700;line-height:1.6}
 
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:-25px;position:relative}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:-25px;position:relative;margin-bottom:20px}
 .tabs a{padding:12px 18px;border-radius:999px;background:#fff;color:#345;font-size:14px;font-weight:700;box-shadow:0 8px 20px #1232;text-decoration:none}
 .tabs a.active{background:#0b4b73;color:#fff}
 .blog-wrap{padding:44px 0 80px}
