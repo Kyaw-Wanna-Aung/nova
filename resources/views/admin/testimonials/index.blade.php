@@ -8,7 +8,10 @@
         <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Testimonials</h1>
         <p class="mt-2 text-slate-500">Manage customer stories, reviews, and featured endorsements.</p>
     </div>
-    <button id="newTestimonialBtn" class="btn-primary inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold shadow-sm"><span class="text-lg leading-none">+</span> Add Testimonial</button>
+    <button id="newTestimonialBtn" class="flex items-center gap-2 grad-a text-white text-sm font-semibold px-4 py-2.5 rounded-lg glow hover:opacity-90 transition">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Add Testimonial
+    </button>
 </header>
 
 @if(session('success'))
@@ -125,7 +128,7 @@
         </div>
         <div class="flex items-center justify-end gap-3 border-t border-slate-100 px-6 py-4 bg-slate-50/60 sticky bottom-0">
             <button type="button" data-close-t class="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-white">Cancel</button>
-            <button type="submit" id="tSubmitBtn" class="btn-primary rounded-xl px-5 py-2.5 text-sm font-semibold">Save Testimonial</button>
+            <button type="submit" id="tSubmitBtn" class="grad-a text-white text-sm font-semibold px-5 py-2.5 rounded-lg glow hover:opacity-90 transition">Save Testimonial</button>
         </div>
     </form>
 </div></div></div>

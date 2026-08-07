@@ -42,12 +42,17 @@
                     <button type="submit" class="border border-slate-200 text-slate-600 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-slate-50 transition">Filter</button>
                     <a href="{{ route('admin.promotions.index') }}" class="text-sm font-medium text-slate-400 hover:text-[var(--navy)] px-2">Clear</a>
                 </form>
-                <button type="button" onclick="openModal()" class="flex items-center gap-2 grad-a text-white text-sm font-semibold px-4 py-2.5 rounded-lg glow hover:opacity-90 transition">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-                    Add Promotion
-                </button>
             </div>
         </div>
+
+        <!-- Add Promotion Button - Moved to Right Side -->
+        <div class="flex justify-end mb-4">
+            <button type="button" onclick="openModal()" class="flex items-center gap-2 grad-a text-white text-sm font-semibold px-4 py-2.5 rounded-lg glow hover:opacity-90 transition">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                Add Promotion
+            </button>
+        </div>
+
         <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             <div class="card p-4"><p class="text-xs text-slate-400 font-medium">Total Promotions</p><p class="text-xl font-display font-bold text-[var(--navy)] mt-1">{{ number_format($stats['total'] ?? 0) }}</p></div>
             <div class="card p-4"><p class="text-xs text-slate-400 font-medium">With Images</p><p class="text-xl font-display font-bold text-sky-600 mt-1">{{ number_format($stats['with_images'] ?? 0) }}</p></div>
@@ -456,4 +461,3 @@
     @endif
 </script>
 @endpush
-
