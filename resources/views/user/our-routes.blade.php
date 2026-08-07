@@ -65,7 +65,14 @@ body{background:#f3f4f6;color:#1f2937}
 
 .trip-grid,.steps-grid,.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .trip-card,.testimonial{background:#fff;border:1px solid #e5e7eb;border-radius:22px;padding:24px;box-shadow:0 10px 24px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:14px}
-.trip-top{display:flex;justify-content:space-between;color:#0b4b73;font-size:12px;font-weight:700;text-transform:uppercase}
+.trip-top{display:flex;justify-content:space-between;align-items:center;color:#0b4b73;font-size:12px;font-weight:700;text-transform:uppercase}
+.trip-top .category-badge{
+    background: #eaf3fb;
+    color: #0b4b73;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+}
 .trip-card h3{color:#1b1d1e;font-size:24px}
 
 /* Date and Time in one line style */
@@ -77,7 +84,7 @@ body{background:#f3f4f6;color:#1f2937}
     gap:8px;
 }
 
-.trip-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:2px solid #eeeff1;padding-top:14px}
+.trip-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:2px solid #eeeff1;padding-top:16px}
 .fare small{display:block;color:#6b7280;text-transform:uppercase;font-size:11px}
 .fare strong{font-size:24px;color:#0b4b73}
 .arrow{width:40px;height:40px;border-radius:50%;background:#f8fafc;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;color:#0b4b73;font-weight:700;text-decoration:none;transition:all .2s}
@@ -180,7 +187,6 @@ body{background:#f3f4f6;color:#1f2937}
                 <h2>Available Trips</h2>
                 <p>Find and book your next intercity journey. Real-time availability for all major routes.</p>
             </div>
-            <!-- View All Trips link pointing to the defined 'our-routes' route -->
             <a href="{{ route('our-routes') }}" class="view-all-link">
                 View All Trips &rarr;
             </a>
@@ -189,12 +195,11 @@ body{background:#f3f4f6;color:#1f2937}
             @forelse($routes as $route)
                 <article class="trip-card">
                     <div class="trip-top">
-                        <span>{{ $route->category }}</span>
+                        <span class="category-badge"><span>{{ $route->category }}</span></span>
                         <span>{{ $route->available_seats }} Seats Available</span>
                     </div>
                     <h3>{{ $route->from_location }} &rarr; {{ $route->to_location }}</h3>
                     
-                    <!-- Date and Time in one single line -->
                     <div class="trip-meta">
                         <span>🕒</span>
                         <span>
@@ -208,7 +213,6 @@ body{background:#f3f4f6;color:#1f2937}
                             <small>Fare</small>
                             <strong>MMK {{ number_format((float) $route->fare) }}</strong>
                         </div>
-                        <!-- Arrow link directing to route details (using our-routes if show route exists, or fallback URL) -->
                         <a href="{{ route('our-routes') }}" class="arrow" title="View Route Details">&rarr;</a>
                     </div>
                 </article>
