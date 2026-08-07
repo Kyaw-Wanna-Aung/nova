@@ -4,7 +4,48 @@
 
 @push('styles')
 <style>
-    header{border-bottom:1px solid #e5e7eb}.logo span{color:#53a7db}nav a{color:#4b5563}.hero{background:linear-gradient(135deg,#174f80,#0a4570,#06365a);color:#fff;padding:90px 0;overflow:hidden;margin:0;border-radius:0;height:auto}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:60px}.badge{display:inline-block;background:#7fb6e4;color:#083a5a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:999px;margin-bottom:26px;letter-spacing:.5px;text-transform:uppercase}.hero h1{font-size:64px;line-height:1.05;font-weight:800;margin-bottom:24px}.hero p{font-size:20px;color:#d7e7f5;max-width:620px;margin-bottom:40px}.store-buttons{display:flex;gap:18px;flex-wrap:wrap}.store-btn{background:#fff;color:#111827;border-radius:14px;padding:16px 22px;display:flex;align-items:center;gap:14px;min-width:220px;box-shadow:0 10px 24px rgba(0,0,0,.12);transition:.3s;text-decoration:none}.store-btn:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(0,0,0,.18)}.store-btn .icon{width:auto;height:auto;border-radius:0;background:transparent;display:block;font-size:34px;line-height:1;color:inherit;margin:0}.store-btn .icon svg{width:34px;height:34px;display:block}.store-btn small{display:block;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:.5px}.store-btn strong{font-size:24px;line-height:1.1}.hero-image{position:relative;display:flex;justify-content:center}.hero-image img{width:100%;max-width:460px;border-radius:10px;transform:rotate(6deg);box-shadow:0 24px 60px rgba(0,0,0,.28)}
+    header{border-bottom:1px solid #e5e7eb}.logo span{color:#53a7db}nav a{color:#4b5563}
+    
+    .hero{background:linear-gradient(135deg,#073b63 0%,#073b63 50%,#073b63 100%);color:#fff;padding:90px 0;overflow:hidden;margin:0;border-radius:0;height:auto}
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:60px}
+    .badge{display:inline-block;background:#7fb6e4;color:#083a5a;font-size:13px;font-weight:700;padding:8px 16px;border-radius:999px;margin-bottom:26px;letter-spacing:.5px;text-transform:uppercase}
+    .hero h1{font-size:64px;line-height:1.05;font-weight:800;margin-bottom:24px}
+    .hero p{font-size:20px;color:#d7e7f5;max-width:620px;margin-bottom:40px}
+    .store-buttons{display:flex;gap:18px;flex-wrap:wrap}
+    .store-btn{background:#fff;color:#111827;border-radius:14px;padding:16px 22px;display:flex;align-items:center;gap:14px;min-width:220px;box-shadow:0 10px 24px rgba(0,0,0,.12);transition:.3s;text-decoration:none}
+    .store-btn:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(0,0,0,.18)}
+    .store-btn .icon{width:auto;height:auto;border-radius:0;background:transparent;display:block;font-size:34px;line-height:1;color:inherit;margin:0}
+    .store-btn .icon svg{width:34px;height:34px;display:block}
+    .store-btn small{display:block;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+    .store-btn strong{font-size:24px;line-height:1.1}
+    
+    /* Hero Image with White Glow / Shadow */
+    .hero-image{position:relative;display:flex;justify-content:center}
+    .hero-image::before {
+        content: '';
+        position: absolute;
+        width: 440px;
+        height: 440px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.25) 45%, rgba(255, 255, 255, 0) 75%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        pointer-events: none;
+        filter: blur(25px);
+    }
+    .hero-image img{
+        width:100%;
+        max-width:420px;
+        border-radius:10px;
+        transform:rotate(8deg);
+        box-shadow: -15px 25px 50px rgba(0, 0, 0, 0.3), 0 0 40px rgba(255, 255, 255, 0.8);
+        position:relative;
+        z-index:1;
+        margin-top: 30px;
+        margin-right: 20px;
+    }
+    
     .partner{padding:90px 0}.section-title{text-align:center;margin-bottom:54px}.section-title h2{font-size:54px;color:#0b4b73;margin-bottom:12px}.section-title p{color:#6b7280;font-size:20px}.partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center}.partner-image img{width:100%;border-radius:26px;display:block;box-shadow:0 18px 40px rgba(0,0,0,.12)}.partner-card{background:#fff;border:1px solid #e5e7eb;border-radius:22px;padding:40px;box-shadow:0 12px 32px rgba(0,0,0,.06)}.partner-card h3{font-size:40px;color:#0b4b73;margin-bottom:16px;line-height:1.1}.partner-card p{color:#6b7280;margin-bottom:30px;font-size:18px}.partner-card .store-buttons .store-btn{background:#111827;color:#fff;min-width:190px;box-shadow:none}.partner-card .store-btn small{color:#cbd5e1}footer h3{font-size:36px}footer p,footer li{color:#c8d6e4}.footer-bottom{color:#c8d6e4}
     @media(max-width:992px){.hero-grid,.partner-grid{grid-template-columns:1fr}.hero{padding:70px 0}.hero h1{font-size:48px}.hero-image{order:-1}.hero-image img{max-width:360px}.section-title h2{font-size:38px}.partner-card h3{font-size:32px}}@media(max-width:576px){.hero h1{font-size:38px}.hero p{font-size:18px}.store-btn{width:100%}.section-title h2{font-size:30px}.partner-card{padding:28px}}
 </style>
@@ -37,6 +78,7 @@
             </div>
         </a>
     </div></div><div class="hero-image"><img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="Nova App" /></div></div></section>
+    
     <section class="partner"><div class="container"><div class="section-title"><h2>Interested to partner with us?</h2><p>Get steady income from your vehicle</p></div><div class="partner-grid"><div class="partner-image"><img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Driver Partner" /></div><div class="partner-card"><h3>Nova for Owners &amp; Drivers</h3><p>Manage your fleet and maximize earnings. Comprehensive dashboard, automated payouts, and route optimization.</p><div class="store-buttons">
         <!-- Google Play Button (Dark) -->
         <a href="{{ $androidAppUrl }}" class="store-btn" target="_blank" rel="noopener noreferrer">

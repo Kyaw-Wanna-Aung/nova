@@ -9,14 +9,22 @@ body{background:#f7fafc}
 .insights-hero h1{font-size:56px;line-height:1.15;letter-spacing:-0.02em;margin:0 0 20px;color:#0b4b73;font-weight:800;max-width:1000px}
 .insights-hero p{max-width:760px;color:#373333;font-size:16px;font-weight:700;line-height:1.6}
 
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:-25px;position:relative;margin-bottom:20px}
+/* Tabs and Divider line */
+.tabs-wrapper {
+    margin-top: -15px;
+    margin-bottom: 80px;
+    border-bottom: 2px solid #c3c2c2; /* တက်ဘ်အောက်က မျဉ်းကြောင်း */
+    padding-bottom: 20px;
+}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;position:relative;margin-bottom:20px}
 .tabs a{padding:12px 18px;border-radius:999px;background:#fff;color:#345;font-size:14px;font-weight:700;box-shadow:0 8px 20px #1232;text-decoration:none}
 .tabs a.active{background:#0b4b73;color:#fff}
-.blog-wrap{padding:44px 0 80px}
-.blog-wide-container{max-width:1320px;width:100%;margin:0 auto;padding:0 20px}
+
+.blog-wrap{padding:20px 0 80px} /* padding-top ကို လျှော့ချထားပါသည် */
+.blog-wide-container{max-width:1400px;width:100%;margin:0 auto;padding:0 20px} /* ကတ်များ ပိုကျယ်လာစေရန် Container ကို 1400px သို့ တိုးထားသည် */
 
 /* Featured Blog Overlay Style */
-.featured-blog{position:relative;border-radius:28px;overflow:hidden;box-shadow:0 14px 34px #0b27401c;margin-bottom:60px;margin-top:30px;min-height:480px;display:flex;align-items:flex-end}
+.featured-blog{position:relative;border-radius:28px;overflow:hidden;box-shadow:0 14px 34px #0b27401c;margin-bottom:80px;margin-top:10px;min-height:480px;display:flex;align-items:flex-end}
 .featured-blog img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1}
 .featured-blog::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.1) 20%,rgba(11,75,115,0.95) 90%);z-index:2}
 .featured-copy{position:relative;z-index:3;padding:48px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;max-width:800px}
@@ -24,14 +32,14 @@ body{background:#f7fafc}
 .featured-copy h2{font-size:38px;line-height:1.15;color:#fff;margin:10px 0 15px}
 .featured-copy p{color:#e2e8f0;font-size:16px;line-height:1.6;margin-bottom:20px}
 
-/* Small Cards Grid Style - Fixed Image Border Radius */
-.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+/* Small Cards Grid Style - Wider & Fixed Border */
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:35px} /* ဇယားကွက်ကြား အကွာအဝေးကို အနည်းငယ် တိုးပေးထားသည် */
 .blog-card{background:transparent;display:flex;flex-direction:column}
 
 .blog-card-img-wrap{
     position:relative;
     width:100%;
-    height:220px;
+    height:240px; /* ပုံအမြင့်ကို အနည်းငယ် တိုးပေးထားသည် */
     border-radius:24px !important;
     overflow:hidden !important;
     -webkit-mask-image:-webkit-radial-gradient(white, black);
@@ -83,11 +91,14 @@ body{background:#f7fafc}
 </section>
 
 <main class="blog-wide-container blog-wrap">
-    <nav class="tabs">
-        @foreach(['' => 'All Stories','Sustainable Travel' => 'Sustainable Travel','Tech & Innovation' => 'Tech & Innovation','Travel Guides' => 'Travel Guides','Corporate Updates' => 'Corporate Updates'] as $value => $label)
-            <a href="{{ route('blog.index', $value ? ['category' => $value] : []) }}" @class(['active' => $category === $value])>{{ $label }}</a>
-        @endforeach
-    </nav>
+    <!-- တက်ဘ်အောက်မှာ မျဉ်းကြောင်းပေါ်လာစေရန် .tabs-wrapper သုံးပေးထားသည် -->
+    <div class="tabs-wrapper">
+        <nav class="tabs">
+            @foreach(['' => 'All Stories','Sustainable Travel' => 'Sustainable Travel','Tech & Innovation' => 'Tech & Innovation','Travel Guides' => 'Travel Guides','Corporate Updates' => 'Corporate Updates'] as $value => $label)
+                <a href="{{ route('blog.index', $value ? ['category' => $value] : []) }}" @class(['active' => $category === $value])>{{ $label }}</a>
+            @endforeach
+        </nav>
+    </div>
 
     @if($featured)
     <article class="featured-blog">
@@ -103,7 +114,6 @@ body{background:#f7fafc}
 
     <div class="blog-grid" id="main-blog-grid">
         @forelse($blogs as $index => $blog)
-        <!-- ပထမ (၃) ခုကိုသာ ပြထားပြီး၊ ကျန်တာတွေကို hidden-blog အဖြစ် ဖွက်ထားပါမယ် -->
         <article class="blog-card {{ $index >= 3 ? 'hidden-blog' : '' }}" style="{{ $index >= 3 ? 'display:none;' : '' }}">
             <div class="blog-card-img-wrap">
                 <img src="{{ Storage::url($blog->featured_image) }}" alt="{{ $blog->title }}">
@@ -148,11 +158,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if(loadMoreBtn) {
         loadMoreBtn.addEventListener('click', function() {
-            // hidden-blog class ပါတဲ့ ကတ်တွေကို ရှာပါမယ်
             let hiddenBlogs = document.querySelectorAll('.hidden-blog');
             let showCount = 0;
             
-            // တစ်ခါနှိပ်ရင် ၃ ခု စီ ထပ်ပြပါမယ်
             hiddenBlogs.forEach(function(card) {
                 if (showCount < 3) {
                     card.style.display = 'flex';
@@ -161,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // ဖွက်ထားတာ ထပ်မရှိတော့ရင် ခလုတ်ကို ဖျောက်လိုက်ပါမယ်
             if (document.querySelectorAll('.hidden-blog').length === 0) {
                 loadMoreBtn.style.display = 'none';
             }

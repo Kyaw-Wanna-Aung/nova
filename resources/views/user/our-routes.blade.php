@@ -6,18 +6,43 @@
 <style>
 body{background:#f3f4f6;color:#1f2937}
 .logo span{color:#53a7db}
-.hero{background:linear-gradient(135deg,#0b4b73,#1d5f90,#2b6da0);color:#fff;padding:90px 0 320px;text-align:center;margin:0;border-radius:0;height:auto}
+
+/* Hero background gradient from #073b63 (top-left) to white (bottom-right) */
+.hero{
+    background: linear-gradient(135deg, #073b63 0%, #1d5f90 50%, #f6f8f9 100%);
+    color:#fff;
+    padding:90px 0 280px;
+    text-align:center;
+    margin:0;
+    border-radius:0;
+    height:auto;
+    position:relative;
+}
 .hero h1{font-size:64px;line-height:1.08;font-weight:800;max-width:900px;margin:0 auto 22px}
 .hero p{color:#d7e7f5;font-size:20px;max-width:760px;margin:0 auto}
 
 /* Container width restriction for content sections so they aren't too wide */
 .container{max-width:1200px;margin:0 auto;padding:0 20px}
 
-.search-card{background:#fff;border-radius:24px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.12);margin:-230px auto 0;position:relative;z-index:2;max-width:1200px}
+/* Search card with transparent/frosted background and wider layout */
+.search-card{
+    background: rgba(240, 244, 248, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 20px 50px rgba(0,0,0,.15);
+    margin:-190px auto 0;
+    position:relative;
+    z-index:2;
+    max-width:1250px;
+}
 .search-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:16px;align-items:end}
-.field label{display:block;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:8px}
-.field input,.field select{width:100%;padding:16px;border:1px solid #d1d5db;border-radius:14px;background:#f8fafc;font-size:15px;outline:none}
-.search-btn{background:#0b4b73;color:#fff;border:0;padding:16px 26px;border-radius:14px;font-weight:700;min-width:170px;cursor:pointer}
+.field label{display:block;font-size:12px;font-weight:700;color:#4b5563;text-transform:uppercase;margin-bottom:8px}
+.field input,.field select{width:100%;padding:16px;border:1px solid #cbd5e1;border-radius:14px;background:#ffffff;font-size:15px;outline:none}
+.search-btn{background:#0b4b73;color:#fff;border:0;padding:16px 26px;border-radius:14px;font-weight:700;min-width:170px;cursor:pointer;transition:background .2s}
+.search-btn:hover{background:#063857}
 
 /* Balanced section padding and width */
 .section{padding:80px 0;    padding-top: 120px;}
