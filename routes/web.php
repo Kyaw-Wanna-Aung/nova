@@ -104,3 +104,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     // 11. Website Blog Management
     Route::resource('blog', AdminBlogController::class)->except(['create', 'show']);
 });
+Route::get('/phpinfo', function () {
+    return phpinfo();
+});
+

@@ -44,7 +44,7 @@ body{background:#f7fafc}
     display:block;
     border-radius:24px !important;
 }
-.blog-card-tag{position:absolute;margin-top:10px;left:14px;background:#fff;color:#073b63;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,0.1);z-index:2}
+.blog-card-tag{position:absolute;top:14px;left:14px;background:#fff;color:#073b63;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,0.1);z-index:2}
 
 .blog-card div.content{padding:14px 10px 0 10px;display:flex;flex-direction:column;flex:1}
 .blog-card h3{color:#073b63;font-size:20px;line-height:1.25;margin:8px 0 10px;flex:1}
