@@ -64,7 +64,98 @@ body{background:#f3f4f6;color:#1f2937}
 .view-all-link:hover{opacity: 0.8;}
 
 .trip-grid,.steps-grid,.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.trip-card,.testimonial{background:#fff;border:1px solid #e5e7eb;border-radius:22px;padding:24px;box-shadow:0 10px 24px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:14px}
+
+/* ===== TRIP CARD ===== */
+.trip-card{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:22px;
+    padding:24px;
+    box-shadow:0 10px 24px rgba(0,0,0,.05);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+    animation: modalSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Modal Slide Up Animation */
+@keyframes modalSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Stagger delays for trip cards */
+.trip-card:nth-child(1) { animation-delay: 0s; }
+.trip-card:nth-child(2) { animation-delay: 0.08s; }
+.trip-card:nth-child(3) { animation-delay: 0.16s; }
+
+/* Hover effect - gradient background + translateY + blue shadow */
+.trip-card:hover {
+    background: linear-gradient(135deg, #073b63 0%, #1d5f90 50%, #f6f8f9 100%);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(7, 59, 99, 0.35);
+    border-color: rgba(7, 59, 99, 0.2);
+}
+
+/* All text turns white on hover */
+.trip-card:hover .trip-top,
+.trip-card:hover .trip-top .category-badge,
+.trip-card:hover h3,
+.trip-card:hover .trip-meta,
+.trip-card:hover .trip-meta span,
+.trip-card:hover .fare small,
+.trip-card:hover .fare strong,
+.trip-card:hover .trip-top span {
+    color: #ffffff !important;
+}
+
+/* Category badge on hover */
+.trip-card:hover .category-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff !important;
+}
+
+/* Arrow on hover */
+.trip-card:hover .arrow {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateX(4px);
+}
+
+/* Trip bottom border on hover */
+.trip-card:hover .trip-bottom {
+    border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Shine effect */
+.trip-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.trip-card:hover::before {
+    left: 100%;
+}
+
 .trip-top{display:flex;justify-content:space-between;align-items:center;color:#0b4b73;font-size:12px;font-weight:700;text-transform:uppercase}
 .trip-top .category-badge{
     background: #eaf3fb;
@@ -72,49 +163,380 @@ body{background:#f3f4f6;color:#1f2937}
     padding: 6px 12px;
     border-radius: 8px;
     font-weight: 700;
+    transition: all 0.3s ease;
 }
-.trip-card h3{color:#1b1d1e;font-size:24px}
+.trip-card h3{color:#1b1d1e;font-size:24px;transition: color 0.3s ease}
+.trip-meta{color:#6b7280;font-size:14px;display:flex;align-items:center;gap:8px;transition: color 0.3s ease}
+.trip-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:2px solid #eeeff1;padding-top:16px;transition: border-color 0.3s ease}
+.fare small{display:block;color:#6b7280;text-transform:uppercase;font-size:11px;transition: color 0.3s ease}
+.fare strong{font-size:24px;color:#0b4b73;transition: color 0.3s ease}
+.arrow{width:40px;height:40px;border-radius:50%;background:#f8fafc;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;color:#0b4b73;font-weight:700;text-decoration:none;transition:all .3s ease}
 
-/* Date and Time in one line style */
-.trip-meta{
-    color:#6b7280;
-    font-size:14px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-
-.trip-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:2px solid #eeeff1;padding-top:16px}
-.fare small{display:block;color:#6b7280;text-transform:uppercase;font-size:11px}
-.fare strong{font-size:24px;color:#0b4b73}
-.arrow{width:40px;height:40px;border-radius:50%;background:#f8fafc;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;color:#0b4b73;font-weight:700;text-decoration:none;transition:all .2s}
-.arrow:hover{background:#0b4b73;color:#fff;border-color:#0b4b73}
-
+/* ===== STEP CARD ===== */
 .steps{background:#fff}
 .steps-head{text-align:center;margin-bottom:40px}
 .eyebrow{display:inline-block;color:#0b4b73;font-size:12px;font-weight:700;text-transform:uppercase}
-.step{text-align:center;padding:16px;background:#fff;border:1px solid #e5e7eb;border-radius:20px;box-shadow:0 5px 15px rgba(0,0,0,.03)}
-.step .icon,.cta-box .icon{width:64px;height:64px;border-radius:18px;background:#eaf3fb;color:#0b4b73;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
-.step h3{color:#0b4b73;font-size:20px}
+
+.step{
+    text-align:center;
+    padding:16px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.03);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+    animation: modalSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Stagger delays for step cards */
+.step:nth-child(1) { animation-delay: 0s; }
+.step:nth-child(2) { animation-delay: 0.08s; }
+.step:nth-child(3) { animation-delay: 0.16s; }
+.step:nth-child(4) { animation-delay: 0.24s; }
+.step:nth-child(5) { animation-delay: 0.32s; }
+.step:nth-child(6) { animation-delay: 0.40s; }
+
+/* Hover effect - gradient background + translateY + blue shadow */
+.step:hover {
+    background: linear-gradient(135deg, #073b63 0%, #1d5f90 50%, #f6f8f9 100%);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(7, 59, 99, 0.30);
+    border-color: rgba(7, 59, 99, 0.2);
+}
+
+/* All text turns white on hover */
+.step:hover h3,
+.step:hover p {
+    color: #ffffff !important;
+}
+
+/* Icon on hover */
+.step:hover .icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff !important;
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.step .icon{
+    width:64px;
+    height:64px;
+    border-radius:18px;
+    background:#eaf3fb;
+    color:#0b4b73;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    margin:0 auto 16px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.step h3{color:#0b4b73;font-size:20px;transition: color 0.3s ease}
+.step p{transition: color 0.3s ease}
+
+/* Glow effect */
+.step::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+    border-radius: 50%;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    opacity: 0;
+}
+
+.step:hover::after {
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+/* ===== TESTIMONIAL CARD ===== */
+.testimonial{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:22px;
+    padding:24px;
+    box-shadow:0 10px 24px rgba(0,0,0,.05);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor:pointer;
+    animation: modalSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Stagger delays for testimonial cards */
+.testimonial:nth-child(1) { animation-delay: 0s; }
+.testimonial:nth-child(2) { animation-delay: 0.12s; }
+.testimonial:nth-child(3) { animation-delay: 0.24s; }
+
+/* Hover effect - gradient background + translateY + blue shadow */
+.testimonial:hover {
+    background: linear-gradient(135deg, #073b63 0%, #1d5f90 50%, #f6f8f9 100%);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(7, 59, 99, 0.30);
+    border-color: rgba(7, 59, 99, 0.2);
+}
+
+/* All text turns white on hover */
+.testimonial:hover p,
+.testimonial:hover .name,
+.testimonial:hover small,
+.testimonial:hover .rating-badge {
+    color: #ffffff !important;
+}
+
+/* Stars on hover */
+.testimonial:hover .stars {
+    color: #ffffff !important;
+    transform: scale(1.05);
+}
+
+.testimonial:hover .stars .empty-star {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Avatar on hover */
+.testimonial:hover .avatar {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff !important;
+    transform: scale(1.05);
+}
+
+/* Rating badge on hover */
+.testimonial:hover .rating-badge {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+}
 
 .testimonials h2{text-align:center;margin-bottom:34px}
-.testimonial p{color:#4b5563;font-style:italic;font-size:15px}
+.testimonial p{color:#4b5563;font-style:italic;font-size:15px;transition: color 0.3s ease}
 .testimonial-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.stars{font-size:20px;color:#2563eb;letter-spacing:2px;line-height:1}
-.stars .empty-star{opacity:.25;color:#93c5fd}
-.rating-badge{background:#f3f4f6;color:#374151;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;min-width:32px;text-align:center;display:inline-block;border:1px solid #e5e7eb}
+.stars{font-size:20px;color:#2563eb;letter-spacing:2px;line-height:1;transition: all 0.3s ease}
+.stars .empty-star{opacity:.25;color:#93c5fd;transition: color 0.3s ease}
+.rating-badge{background:#f3f4f6;color:#374151;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;min-width:32px;text-align:center;display:inline-block;border:1px solid #e5e7eb;transition: all 0.3s ease}
 .person{display:flex;gap:14px;align-items:center;margin-top:auto}
-.avatar{width:48px;height:48px;border-radius:50%;background:#dbeafe;display:grid;place-items:center;color:#0b4b73;font-weight:800}
-.name{color:#0b4b73;font-weight:700;font-size:15px}
+.avatar{width:48px;height:48px;border-radius:50%;background:#dbeafe;display:grid;place-items:center;color:#0b4b73;font-weight:800;transition: all 0.3s ease}
+.name{color:#0b4b73;font-weight:700;font-size:15px;transition: color 0.3s ease}
 
-.cta{background:#fff}
-.cta-box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:30px;padding:48px 24px;text-align:center;max-width:900px;margin:0 auto}
+/* ===== CTA BOX ===== */
+.cta{background:#fff;position:relative;overflow:hidden}
+
+/* Background pulse animation */
+.cta::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(7,59,99,0.03), transparent 60%);
+    animation: ctaPulse 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes ctaPulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+.cta-box{
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    border-radius:30px;
+    padding:48px 24px;
+    text-align:center;
+    max-width:900px;
+    margin:0 auto;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position:relative;
+    z-index:1;
+    animation: modalSlideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.2s;
+}
+
+.cta-box:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 30px 70px rgba(7,59,99,0.15);
+    border-color: rgba(7,59,99,0.15);
+}
+
+/* CTA icon with float animation */
+.cta-box .icon{
+    width:64px;
+    height:64px;
+    border-radius:18px;
+    background:#eaf3fb;
+    color:#0b4b73;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    margin:0 auto 16px;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: ctaIconFloat 3s ease-in-out infinite;
+}
+
+@keyframes ctaIconFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.cta-box:hover .icon {
+    transform: scale(1.15) rotate(-8deg);
+    animation-play-state: paused;
+}
+
+/* CTA heading with underline animation */
+.cta-box h2 {
+    position: relative;
+    display: inline-block;
+}
+
+.cta-box h2::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #073b63, #1d5f90, #073b63);
+    border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cta-box:hover h2::after {
+    width: 100%;
+}
+
+/* CTA paragraph with slide effect */
+.cta-box p {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cta-box:hover p {
+    transform: translateY(-2px);
+}
+
 .cta-actions{display:flex;justify-content:center;gap:16px;margin-top:20px}
-.btn,.btn-outline{display:inline-block;padding:14px 28px;border-radius:12px;font-weight:700;text-decoration:none}
-.btn{background:#0b4b73;color:#fff}
-.btn-outline{border:2px solid #0b4b73;color:#0b4b73;background:#fff}
 
-/* Responsive Media Queries */
+/* CTA Buttons with enhanced animations */
+.btn,.btn-outline{
+    display:inline-block;
+    padding:14px 28px;
+    border-radius:12px;
+    font-weight:700;
+    text-decoration:none;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position:relative;
+    overflow:hidden;
+}
+
+.btn{
+    background:#0b4b73;
+    color:#fff;
+}
+
+/* Button shine effect */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(11,75,115,0.3);
+    background: #063857;
+}
+
+.btn-outline{
+    border:2px solid #0b4b73;
+    color:#0b4b73;
+    background:#fff;
+}
+
+.btn-outline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-outline:hover::before {
+    left: 100%;
+}
+
+.btn-outline:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(11,75,115,0.15);
+    background: #0b4b73;
+    color: #fff;
+}
+
+/* ===== SCROLL REVEAL ANIMATIONS ===== */
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Hero text animation */
+.hero h1, .hero p {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero p {
+    animation-delay: 0.3s;
+}
+
+/* Search card animation */
+.search-card {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+}
+
+/* Section heading animations */
+.section-head h2, .steps-head h2, .testimonials h2, .cta-box h2 {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.section-head p, .steps-head p, .cta-box p {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.2s forwards;
+}
+
+.section-head .view-all-link {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.3s forwards;
+}
+
+/* ===== RESPONSIVE MEDIA QUERIES (ORIGINAL - UNCHANGED) ===== */
 @media(max-width:1024px){
     .steps-grid{grid-template-columns:repeat(2,1fr)}
 }
@@ -193,7 +615,7 @@ body{background:#f3f4f6;color:#1f2937}
         </div>
         <div class="trip-grid">
             @forelse($routes as $route)
-                <article class="trip-card">
+                <article class="trip-card scroll-animate">
                     <div class="trip-top">
                         <span class="category-badge"><span>{{ $route->category }}</span></span>
                         <span>{{ $route->available_seats }} Seats Available</span>
@@ -239,7 +661,7 @@ body{background:#f3f4f6;color:#1f2937}
                 ['🚗', '5. Enjoy your ride', 'Relax in our premium electric vehicles with spacious seating and climate control.'],
                 ['👤', '6. Share your location', 'Keep loved ones informed by sharing your live trip status before you arrive.']
             ] as $stepItem)
-                <div class="step">
+                <div class="step scroll-animate">
                     <div class="icon">{{ $stepItem[0] }}</div>
                     <h3>{{ $stepItem[1] }}</h3>
                     <p>{{ $stepItem[2] }}</p>
@@ -254,7 +676,7 @@ body{background:#f3f4f6;color:#1f2937}
         <h2>Trusted by Thousands</h2>
         <div class="testimonial-grid">
             @forelse($testimonials as $testimonial)
-                <article class="testimonial">
+                <article class="testimonial scroll-animate">
                     <div class="testimonial-header">
                         <div class="stars">
                             @for($ratingStar = 1; $ratingStar <= 5; $ratingStar++)
@@ -289,7 +711,7 @@ body{background:#f3f4f6;color:#1f2937}
 
 <section class="section cta">
     <div class="container">
-        <div class="cta-box">
+        <div class="cta-box scroll-animate">
             <div class="icon">🚀</div>
             <h2>Be ready for your next journey</h2>
             <p>Find and book your next intercity journey. Real-time availability for all major routes.</p>
@@ -300,4 +722,33 @@ body{background:#f3f4f6;color:#1f2937}
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // ===== SCROLL ANIMATION INTERSECTION OBSERVER =====
+        const observerOptions = {
+            threshold: 0.12,
+            rootMargin: '0px 0px -20px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with scroll-animate class
+        document.querySelectorAll('.scroll-animate').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Also observe trip cards, steps, testimonials, and cta-box
+        document.querySelectorAll('.trip-card, .step, .testimonial, .cta-box').forEach(element => {
+            observer.observe(element);
+        });
+    });
+</script>
 @endsection
