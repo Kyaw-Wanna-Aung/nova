@@ -6,10 +6,10 @@ use App\Http\Controllers\Api\AdminAuthController as ApiAdminAuthController;
 use App\Http\Controllers\Api\HeroBannerController as ApiHeroBannerController;
 use App\Http\Controllers\Api\PromotionController as ApiPromotionController;
 use App\Http\Controllers\Api\RouteController as ApiRouteController;
-
+use App\Http\Controllers\Api\FaqController as ApiFaqController;
 use App\Http\Controllers\Admin\HeroBannerController as AdminHeroBannerController;
 use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
-
+use App\Http\Controllers\Api\TestimonialController as ApiTestimonialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +22,8 @@ Route::get('/promotions', [ApiPromotionController::class, 'index']);
 Route::get('/hero-banner', [ApiHeroBannerController::class, 'show']);
 
 Route::get('/routes', [ApiRouteController::class, 'index']);
-
-
+Route::get('/testimonials', [ApiTestimonialController::class, 'index']);
+Route::get('/faqs', [ApiFaqController::class, 'index']);
 /*
 |--------------------------------------------------------------------------
 | Admin API Authentication
