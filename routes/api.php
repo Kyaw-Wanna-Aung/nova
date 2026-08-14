@@ -1,72 +1,95 @@
 <?php
 
-// ⚠️ အရေးကြီး: Api အစား Admin Controller လမ်းကြောင်းများသို့ ပြောင်းလဲထားပါသည်
-use App\Http\Controllers\Admin\AdminAuthController;
-use App\Http\Controllers\Admin\HeroBannerController;
-use App\Http\Controllers\Admin\PromotionController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\HeroBannerController as AdminHeroBannerController;
+use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
+
+use App\Http\Controllers\Api\HeroBannerController as ApiHeroBannerController;
+use App\Http\Controllers\Api\PromotionController as ApiPromotionController;
+use App\Http\Controllers\Api\RouteController as ApiRouteController;
+
 
 /*
 |--------------------------------------------------------------------------
-| Public Admin Routes
+| Public API Endpoints
 |--------------------------------------------------------------------------
 */
-// Admin Login API (No Token Required)
+
+Route::get('/promotions', [ApiPromotionController::class, 'index']);
+Route::get('/hero-banner', [ApiHeroBannerController::class, 'show']);
+Route::get('/routes', [ApiRouteController::class, 'index']);
+
+
+/*
+|--------------------------------------------------------------------------
+| Admin Authentication
+|--------------------------------------------------------------------------
+|
+| NOTE:
+| These currently use AdminAuthController, which is primarily written for
+| Blade/session authentication. Keep them for now until admin API auth is
+| properly separated into its own API controller.
+|
+*/
+
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
 
 
 /*
 |--------------------------------------------------------------------------
-| Protected Admin Routes (Sanctum Authenticated)
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
-    
-    // Only logged-in Admins can register another Admin
-    Route::post('/register', [AdminAuthController::class, 'registerAdmin']);
-    
-    // Fetch logged-in Admin details
-    Route::get('/me', [AdminAuthController::class, 'me']);
-    
-    // Admin Logout API
-    Route::post('/logout', [AdminAuthController::class, 'logout']);
-    
-});
-
-/*
-|--------------------------------------------------------------------------
-| Routes Management APIs
+| Protected Admin API Endpoints
 |--------------------------------------------------------------------------
 */
 
-// Public: ခရီးစဉ်များကို မည်သူမဆို ကြည့်ရှုနိုင်မည်
+Route::middleware('auth:sanctum')
+    ->prefix('admin')
+    ->group(function () {
 
-// Protected: Admin သာလျှင် ခရီးစဉ် သစ်/ပြင်/ဖျက် လုပ်နိုင်မည်
-Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
-});
+        /*
+        |--------------------------------------------------------------------------
+        | Admin Account
+        |--------------------------------------------------------------------------
+        */
 
-/*
-|--------------------------------------------------------------------------
-| Public Endpoints
-|--------------------------------------------------------------------------
-*/
-Route::get('/hero-banner', [HeroBannerController::class, 'show']);
-Route::get('/promotions', [PromotionController::class, 'index']);
+        Route::post('/register', [AdminAuthController::class, 'registerAdmin']);
+        Route::get('/me', [AdminAuthController::class, 'me']);
+        Route::post('/logout', [AdminAuthController::class, 'logout']);
 
-/*
-|--------------------------------------------------------------------------
-| Protected Admin Endpoints
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
-    // Top Hero Banner Update (POST with _method=PUT နှင့် PUT နှစ်မျိုးလုံး လက်ခံသည်)
-    Route::match(['put', 'post'], '/hero-banner', [HeroBannerController::class, 'update']);
 
-    // Promotions Add / Edit / Delete
-    Route::post('/promotions', [PromotionController::class, 'store']);
-    
-    // POST (with _method=PUT) နှင့် PUT နှစ်မျိုးလုံး လက်ခံရန်
-    Route::match(['put', 'post'], '/promotions/{promotion}', [PromotionController::class, 'update']);
-    
-    Route::delete('/promotions/{promotion}', [PromotionController::class, 'destroy']);
-});
+        /*
+        |--------------------------------------------------------------------------
+        | Hero Banner
+        |--------------------------------------------------------------------------
+        */
+
+        Route::match(
+            ['put', 'post'],
+            '/hero-banner',
+            [AdminHeroBannerController::class, 'update']
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Promotions
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            '/promotions',
+            [AdminPromotionController::class, 'store']
+        );
+
+        Route::match(
+            ['put', 'post'],
+            '/promotions/{promotion}',
+            [AdminPromotionController::class, 'update']
+        );
+
+        Route::delete(
+            '/promotions/{promotion}',
+            [AdminPromotionController::class, 'destroy']
+        );
+    });
