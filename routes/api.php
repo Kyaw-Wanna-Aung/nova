@@ -10,7 +10,8 @@ use App\Http\Controllers\Api\PromotionController as ApiPromotionController;
 use App\Http\Controllers\Api\RouteController as ApiRouteController;
 use App\Http\Controllers\Api\TestimonialController as ApiTestimonialController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\NewsletterController as ApiNewsletterController;
+use App\Http\Controllers\Api\VisionMissionController as ApiVisionMissionController;
 /*
 |--------------------------------------------------------------------------
 | Public API Endpoints
@@ -25,7 +26,9 @@ Route::get('/routes', [ApiRouteController::class, 'index']);
 Route::get('/testimonials', [ApiTestimonialController::class, 'index']);
 Route::get('/faqs', [ApiFaqController::class, 'index']);
 Route::get('/blogs', [ApiBlogController::class, 'index']);
+Route::get('/vision-mission', [ApiVisionMissionController::class, 'show']);
 
+Route::post('/newsletter/subscribe', [ApiNewsletterController::class, 'store']);
 Route::get(
     '/blogs/{blog:slug}',
     [ApiBlogController::class, 'show']

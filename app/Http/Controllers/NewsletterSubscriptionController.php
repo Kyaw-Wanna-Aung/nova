@@ -10,7 +10,7 @@ class NewsletterSubscriptionController extends Controller
 {
     public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate(['email' => ['required', 'email:rfc,dns', 'max:255']]);
+        $data = $request->validate(['email' => ['required', 'email:rfc', 'max:255']]);
 
         if (Subscription::query()->where('email', $data['email'])->exists()) {
             return back()->withInput()->with('error', 'This email is already subscribed to our newsletter.');
