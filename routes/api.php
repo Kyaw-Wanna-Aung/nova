@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\AdminAuthController;
-use App\Http\Controllers\Admin\HeroBannerController as AdminHeroBannerController;
-use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
-
+use App\Http\Controllers\Api\AdminAuthController as ApiAdminAuthController;
 use App\Http\Controllers\Api\HeroBannerController as ApiHeroBannerController;
 use App\Http\Controllers\Api\PromotionController as ApiPromotionController;
 use App\Http\Controllers\Api\RouteController as ApiRouteController;
+
+use App\Http\Controllers\Admin\HeroBannerController as AdminHeroBannerController;
+use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 
 
 /*
@@ -18,23 +18,19 @@ use App\Http\Controllers\Api\RouteController as ApiRouteController;
 */
 
 Route::get('/promotions', [ApiPromotionController::class, 'index']);
+
 Route::get('/hero-banner', [ApiHeroBannerController::class, 'show']);
+
 Route::get('/routes', [ApiRouteController::class, 'index']);
 
 
 /*
 |--------------------------------------------------------------------------
-| Admin Authentication
+| Admin API Authentication
 |--------------------------------------------------------------------------
-|
-| NOTE:
-| These currently use AdminAuthController, which is primarily written for
-| Blade/session authentication. Keep them for now until admin API auth is
-| properly separated into its own API controller.
-|
 */
 
-Route::post('/admin/login', [AdminAuthController::class, 'login']);
+Route::post('/admin/login', [ApiAdminAuthController::class, 'login']);
 
 
 /*
@@ -53,14 +49,16 @@ Route::middleware('auth:sanctum')
         |--------------------------------------------------------------------------
         */
 
-        Route::post('/register', [AdminAuthController::class, 'registerAdmin']);
-        Route::get('/me', [AdminAuthController::class, 'me']);
-        Route::post('/logout', [AdminAuthController::class, 'logout']);
+        Route::get('/me', [ApiAdminAuthController::class, 'me']);
+
+        Route::post('/logout', [ApiAdminAuthController::class, 'logout']);
+
+        Route::post('/register', [ApiAdminAuthController::class, 'register']);
 
 
         /*
         |--------------------------------------------------------------------------
-        | Hero Banner
+        | Hero Banner Management
         |--------------------------------------------------------------------------
         */
 
@@ -73,7 +71,7 @@ Route::middleware('auth:sanctum')
 
         /*
         |--------------------------------------------------------------------------
-        | Promotions
+        | Promotion Management
         |--------------------------------------------------------------------------
         */
 
