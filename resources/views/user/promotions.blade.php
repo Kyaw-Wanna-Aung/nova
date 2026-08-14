@@ -6,6 +6,15 @@
 <style>
     body{background:#f3f4f6;color:#1f2937}.logo span{color:#53a7db}nav a{color:#4b5563}.hero{padding:40px 0;margin:0;border-radius:0;height:auto;background:none}.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
 
+    /* ===== MATERIAL SYMBOLS SETUP ===== */
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        font-size: inherit;
+        line-height: 1;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
     /* ===== PROMO CARD WITH FLASHLIGHT EFFECT (MORE BRIGHT) ===== */
     .promo-card{
         background:#1b517d;
@@ -122,6 +131,10 @@
         animation: fadeInDown 0.8s ease-out 0.2s both;
     }
 
+    .promo-badge .material-symbols-outlined {
+        font-size: 20px;
+    }
+
     .promo-card h1{
         font-size:58px;
         line-height:1.05;
@@ -179,6 +192,10 @@
         margin:0;
         color:inherit;
         transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .feature .icon .material-symbols-outlined {
+        font-size: 24px;
     }
 
     .claim-btn{
@@ -271,6 +288,39 @@
         font-size:16px;
         text-shadow: 0 1px 10px rgba(0,0,0,0.05);
     }
+
+    /* ===== SECTION HEADER WITH VIEW ALL ON RIGHT ===== */
+    .section-header{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-end;
+        gap:20px;
+        margin-bottom:30px;
+    }
+
+    .section-header h2{
+        color:#27292b;
+        font-size:40px;
+        line-height:1.1;
+        margin:0;
+    }
+
+    .section-header p{
+        color:#6b7280;
+        margin-top:10px;
+    }
+
+    .view-all{
+        color: #0b4b73;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        transition: opacity 0.2s;
+    }
+    .view-all:hover{opacity: 0.8;}
 
     /* ===== ROUTE CARD WITH CAR ICON ANIMATION (7 SECONDS) ===== */
     .route-card{
@@ -829,13 +879,16 @@
         <div class="container hero-grid">
             <div class="promo-card">
                 <div>
-                    <div class="promo-badge">🌿 {{ $heroBanner?->category ?? 'Sustainable Travel' }}</div>
+                    <div class="promo-badge">
+                        <span class="material-symbols-outlined">eco</span>
+                        {{ $heroBanner?->category ?? 'Sustainable Travel' }}
+                    </div>
                     <h1>{{ $heroBanner?->title ?? 'No banner available' }}</h1>
                     <p>{{ $heroBanner?->description }}</p>
                     <div class="features">
                         @if($heroBanner?->badge_1_title)
                         <div class="feature">
-                            <div class="icon">⚡</div>
+                            <div class="icon"><span class="material-symbols-outlined">electric_bolt</span></div>
                             <div>
                                 <h4>{{ $heroBanner->badge_1_title }}</h4>
                                 <span>{{ $heroBanner->badge_1_sub }}</span>
@@ -844,7 +897,7 @@
                         @endif
                         @if($heroBanner?->badge_2_title)
                         <div class="feature">
-                            <div class="icon">🛋</div>
+                            <div class="icon"><span class="material-symbols-outlined">airline_seat_recline_extra</span></div>
                             <div>
                                 <h4>{{ $heroBanner->badge_2_title }}</h4>
                                 <span>{{ $heroBanner->badge_2_sub }}</span>
@@ -912,8 +965,8 @@
     <section class="newsletter">
         <div class="container">
             <div class="newsletter-box">
-                <span class="thank-you-left">Thank You</span>
-                <span class="thank-you-right">Thank You</span>
+                <span class="thank-you-left"></span>
+                <span class="thank-you-right"></span>
                 <h3>Stay Updated on New Routes</h3>
                 <p>Join our newsletter to receive exclusive flash deals, early-bird membership invites, and Myanmar travel insights directly in your inbox.</p>
                 <form method="POST" action="{{ route('newsletter.subscribe') }}" class="subscribe">

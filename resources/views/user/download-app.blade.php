@@ -50,6 +50,13 @@
         letter-spacing:.5px;
         text-transform:uppercase;
         animation: fadeInDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+    }
+
+    .badge .material-symbols-outlined {
+        font-size: 20px;
     }
 
     @keyframes fadeInDown {
@@ -132,6 +139,10 @@
         color:inherit;
         margin:0;
         transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .store-btn .icon i {
+        font-size: 34px;
     }
 
     .store-btn:hover .icon {
@@ -349,16 +360,17 @@
     <section class="hero">
         <div class="container hero-grid">
             <div>
-                <span class="badge">The App is Here</span>
+                <span class="badge">
+                    <span class="material-symbols-outlined">download</span>
+                    The App is Here
+                </span>
                 <h1>Experience the Future of Mobility</h1>
                 <p>Nova Mobility brings the luxury of premium intercity travel to your fingertips. Download now and redefine your journey across Myanmar.</p>
                 <div class="store-buttons">
                     <!-- App Store Button -->
                     <a href="{{ $iosAppUrl }}" class="store-btn" target="_blank" rel="noopener noreferrer">
                         <div class="icon">
-                            <svg viewBox="0 0 384 512" width="34" height="34" fill="currentColor">
-                                <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 126.7 25.2 0 43.2-19.9 75.8-19.9 31.4 0 47.5 19.9 76.5 19.9 48.3 0 92.9-86.9 103.8-123.9-49.5-25.7-50.6-80.8-50.6-89.8zm-65.6-48.8c-19.2 14.5-28.1 34.6-27.7 57.9 20.7 1.6 42.6-11.4 55.6-29.8 13.4-19.1 17.2-44.8 15.5-65.9-24.1 1.1-43.4 14.8-56.5 37.8z"/>
-                            </svg>
+                            <i class="fa-brands fa-apple"></i>
                         </div>
                         <div>
                             <small>Download on the</small>
@@ -414,9 +426,7 @@
                         <!-- App Store Button (Dark) -->
                         <a href="{{ $iosAppUrl }}" class="store-btn" target="_blank" rel="noopener noreferrer">
                             <div class="icon">
-                                <svg viewBox="0 0 384 512" width="34" height="34" fill="currentColor">
-                                    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 126.7 25.2 0 43.2-19.9 75.8-19.9 31.4 0 47.5 19.9 76.5 19.9 48.3 0 92.9-86.9 103.8-123.9-49.5-25.7-50.6-80.8-50.6-89.8zm-65.6-48.8c-19.2 14.5-28.1 34.6-27.7 57.9 20.7 1.6 42.6-11.4 55.6-29.8 13.4-19.1 17.2-44.8 15.5-65.9-24.1 1.1-43.4 14.8-56.5 37.8z"/>
-                                </svg>
+                                <i class="fa-brands fa-apple"></i>
                             </div>
                             <div>
                                 <small>Download on the</small>

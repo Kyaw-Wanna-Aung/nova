@@ -7,6 +7,15 @@
 body{background:#f3f4f6;color:#1f2937}
 .logo span{color:#53a7db}
 
+/* ===== MATERIAL SYMBOLS SETUP ===== */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+    font-size: inherit;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 /* Hero background gradient from #073b63 (top-left) to white (bottom-right) */
 .hero{
     background: linear-gradient(135deg, #073b63 0%, #1d5f90 50%, #f6f8f9 100%);
@@ -39,10 +48,53 @@ body{background:#f3f4f6;color:#1f2937}
     max-width:1250px;
 }
 .search-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:16px;align-items:end}
+
+.field {
+    position: relative;
+}
+
 .field label{display:block;font-size:12px;font-weight:700;color:#4b5563;text-transform:uppercase;margin-bottom:8px}
-.field input,.field select{width:100%;padding:16px;border:1px solid #cbd5e1;border-radius:14px;background:#ffffff;font-size:15px;outline:none}
-.search-btn{background:#0b4b73;color:#fff;border:0;padding:16px 26px;border-radius:14px;font-weight:700;min-width:170px;cursor:pointer;transition:background .2s}
+
+.field .material-symbols-outlined {
+    position: absolute;
+    bottom: 16px;
+    left: 14px;
+    font-size: 20px;
+    color: #6b7280;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.field input,.field select{
+    width:100%;
+    padding:16px 16px 16px 44px;
+    border:1px solid #cbd5e1;
+    border-radius:14px;
+    background:#ffffff;
+    font-size:15px;
+    outline:none;
+}
+
+.search-btn{
+    background:#0b4b73;
+    color:#fff;
+    border:0;
+    padding:16px 26px;
+    border-radius:14px;
+    font-weight:700;
+    min-width:170px;
+    cursor:pointer;
+    transition:background .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
 .search-btn:hover{background:#063857}
+
+.search-btn .material-symbols-outlined {
+    font-size: 22px;
+}
 
 /* Balanced section padding and width */
 .section{padding:80px 0;    padding-top: 120px;}
@@ -119,6 +171,10 @@ body{background:#f3f4f6;color:#1f2937}
     color: #ffffff !important;
 }
 
+.trip-card:hover .trip-meta .material-symbols-outlined {
+    color: #ffffff !important;
+}
+
 /* Category badge on hover */
 .trip-card:hover .category-badge {
     background: rgba(255, 255, 255, 0.2);
@@ -167,6 +223,11 @@ body{background:#f3f4f6;color:#1f2937}
 }
 .trip-card h3{color:#1b1d1e;font-size:24px;transition: color 0.3s ease}
 .trip-meta{color:#6b7280;font-size:14px;display:flex;align-items:center;gap:8px;transition: color 0.3s ease}
+
+.trip-meta .material-symbols-outlined {
+    font-size: 18px;
+}
+
 .trip-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:2px solid #eeeff1;padding-top:16px;transition: border-color 0.3s ease}
 .fare small{display:block;color:#6b7280;text-transform:uppercase;font-size:11px;transition: color 0.3s ease}
 .fare strong{font-size:24px;color:#0b4b73;transition: color 0.3s ease}
@@ -233,6 +294,15 @@ body{background:#f3f4f6;color:#1f2937}
     margin:0 auto 16px;
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+.step .icon .material-symbols-outlined {
+    font-size: 32px;
+}
+
+.step:hover .icon .material-symbols-outlined {
+    color: #ffffff !important;
+}
+
 .step h3{color:#0b4b73;font-size:20px;transition: color 0.3s ease}
 .step p{transition: color 0.3s ease}
 
@@ -383,6 +453,10 @@ body{background:#f3f4f6;color:#1f2937}
     animation: ctaIconFloat 3s ease-in-out infinite;
 }
 
+.cta-box .icon .material-symbols-outlined {
+    font-size: 32px;
+}
+
 @keyframes ctaIconFloat {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-8px); }
@@ -436,6 +510,14 @@ body{background:#f3f4f6;color:#1f2937}
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     position:relative;
     overflow:hidden;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn .material-symbols-outlined,
+.btn-outline .material-symbols-outlined {
+    font-size: 22px;
 }
 
 .btn{
@@ -573,6 +655,7 @@ body{background:#f3f4f6;color:#1f2937}
         <form method="GET" class="search-grid">
             <div class="field">
                 <label>From</label>
+                <span class="material-symbols-outlined">pin_drop</span>
                 <select name="from">
                     <option value="">Any departure</option>
                     @foreach($origins as $origin)
@@ -582,6 +665,7 @@ body{background:#f3f4f6;color:#1f2937}
             </div>
             <div class="field">
                 <label>To</label>
+                <span class="material-symbols-outlined">location_on</span>
                 <select name="to">
                     <option value="">Any destination</option>
                     @foreach($destinations as $destination)
@@ -591,13 +675,18 @@ body{background:#f3f4f6;color:#1f2937}
             </div>
             <div class="field">
                 <label>Date</label>
+                <span class="material-symbols-outlined">schedule</span>
                 <input type="date" name="date" value="{{ request('date') }}">
             </div>
             <div class="field">
                 <label>Passengers</label>
+                <span class="material-symbols-outlined">person</span>
                 <input type="number" min="1" name="passengers" value="{{ request('passengers') }}" placeholder="Passengers">
             </div>
-            <button class="search-btn">Search Trip</button>
+            <button class="search-btn">
+                <span class="material-symbols-outlined">search</span>
+                Search Trip
+            </button>
         </form>
     </section>
 </div>
@@ -623,7 +712,7 @@ body{background:#f3f4f6;color:#1f2937}
                     <h3>{{ $route->from_location }} &rarr; {{ $route->to_location }}</h3>
                     
                     <div class="trip-meta">
-                        <span>🕒</span>
+                        <span class="material-symbols-outlined">schedule</span>
                         <span>
                             {{ $route->departure_date?->isToday() ? 'Today' : ($route->departure_date?->isTomorrow() ? 'Tomorrow' : $route->departure_date?->format('d M')) }}, 
                             {{ $route->departure_time ? \Carbon\Carbon::parse($route->departure_time)->format('h:i A') : '--' }}
@@ -653,20 +742,36 @@ body{background:#f3f4f6;color:#1f2937}
             <p>Your journey with Nova Mobility is designed to be effortless from start to finish.</p>
         </div>
         <div class="steps-grid">
-            @foreach([
-                ['📱', '1. Book your ticket', 'Select your route, date, and preferred seat through our mobile app or website.'],
-                ['💳', '2. Make Payment', 'Securely pay using your preferred digital wallet or mobile banking service.'],
-                ['🔔', '3. Get notified', 'Receive a reminder and driver details exactly 1 hour before departure.'],
-                ['📍', '4. Track your driver', 'Watch your driver\'s real-time location as they approach your pickup point.'],
-                ['🚗', '5. Enjoy your ride', 'Relax in our premium electric vehicles with spacious seating and climate control.'],
-                ['👤', '6. Share your location', 'Keep loved ones informed by sharing your live trip status before you arrive.']
-            ] as $stepItem)
-                <div class="step scroll-animate">
-                    <div class="icon">{{ $stepItem[0] }}</div>
-                    <h3>{{ $stepItem[1] }}</h3>
-                    <p>{{ $stepItem[2] }}</p>
-                </div>
-            @endforeach
+            <div class="step scroll-animate">
+                <div class="icon"><span class="material-symbols-outlined">confirmation_number</span></div>
+                <h3>1. Book your ticket</h3>
+                <p>Select your route, date, and preferred seat through our mobile app or website.</p>
+            </div>
+            <div class="step scroll-animate">
+                <div class="icon"><span class="material-symbols-outlined">payments</span></div>
+                <h3>2. Make Payment</h3>
+                <p>Securely pay using your preferred digital wallet or mobile banking service.</p>
+            </div>
+            <div class="step scroll-animate">
+                <div class="icon"><span class="material-symbols-outlined">notifications_active</span></div>
+                <h3>3. Get notified</h3>
+                <p>Receive a reminder and driver details exactly 1 hour before departure.</p>
+            </div>
+            <div class="step scroll-animate">
+                <div class="icon"><span class="material-symbols-outlined">near_me</span></div>
+                <h3>4. Track your driver</h3>
+                <p>Watch your driver's real-time location as they approach your pickup point.</p>
+            </div>
+            <div class="step scroll-animate">
+                <div class="icon"><span class="material-symbols-outlined">directions_car</span></div>
+                <h3>5. Enjoy your ride</h3>
+                <p>Relax in our premium electric vehicles with spacious seating and climate control.</p>
+            </div>
+            <div class="step scroll-animate">
+                <div class="icon"><span class="material-symbols-outlined">share_location</span></div>
+                <h3>6. Share your location</h3>
+                <p>Keep loved ones informed by sharing your live trip status before you arrive.</p>
+            </div>
         </div>
     </div>
 </section>
@@ -712,12 +817,18 @@ body{background:#f3f4f6;color:#1f2937}
 <section class="section cta">
     <div class="container">
         <div class="cta-box scroll-animate">
-            <div class="icon">🚀</div>
+            <div class="icon"><span class="material-symbols-outlined">mobile</span></div>
             <h2>Be ready for your next journey</h2>
             <p>Find and book your next intercity journey. Real-time availability for all major routes.</p>
             <div class="cta-actions">
-                <a href="{{ route('download-app') }}" class="btn">Download the App</a>
-                <a href="{{ route('support') }}" class="btn-outline">Become a Partner</a>
+                <a href="{{ route('download-app') }}" class="btn">
+                    <span class="material-symbols-outlined">download</span>
+                    Download the App
+                </a>
+                <a href="{{ route('support') }}" class="btn-outline">
+                    <span class="material-symbols-outlined">handshake</span>
+                    Become a Partner
+                </a>
             </div>
         </div>
     </div>

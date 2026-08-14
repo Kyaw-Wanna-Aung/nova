@@ -6,6 +6,15 @@
 <style>
     body{background:#f3f4f6;color:#1f2937}.logo span{color:#53a7db}nav a{color:#4b5563}
 
+    /* ===== MATERIAL SYMBOLS SETUP ===== */
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        font-size: inherit;
+        line-height: 1;
+        display: inline-flex;
+        vertical-align: middle;
+    }
+
     /* ===== HERO SECTION ANIMATIONS ===== */
     .hero{
         background:linear-gradient(135deg,#073b63,#094776,#357cb1);
@@ -15,11 +24,11 @@
         margin:0;
         border-radius:0;
         height:auto;
+        min-height:500px;
         position:relative;
         overflow:hidden;
     }
 
-    /* Hero background pulse animation */
     .hero::before {
         content: '';
         position: absolute;
@@ -30,6 +39,7 @@
         background: radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 60%);
         animation: heroPulse 6s ease-in-out infinite;
         pointer-events: none;
+        z-index: 0;
     }
 
     @keyframes heroPulse {
@@ -45,7 +55,7 @@
         opacity: 0;
         transform: translateY(-30px);
         position:relative;
-        z-index:1;
+        z-index:2;
     }
 
     @keyframes heroTitle {
@@ -62,7 +72,7 @@
         opacity: 0;
         transform: translateY(20px);
         position:relative;
-        z-index:1;
+        z-index:2;
     }
 
     @keyframes heroDesc {
@@ -82,7 +92,7 @@
         opacity: 0;
         transform: translateY(30px);
         position:relative;
-        z-index:1;
+        z-index:2;
     }
 
     @keyframes searchBox {
@@ -113,9 +123,15 @@
         transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         position:relative;
         overflow:hidden;
+        display:flex;
+        align-items:center;
+        justify-content:center;
     }
 
-    /* Button shine effect */
+    .search-box button .material-symbols-outlined {
+        font-size: 28px;
+    }
+
     .search-box button::before {
         content: '';
         position: absolute;
@@ -136,8 +152,106 @@
         background: #063857;
     }
 
+    /* ===== TAXI CAR ANIMATIONS ===== */
+    .taxi-container {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%;
+        height: 200px;
+        z-index: 1;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .taxi {
+        position: absolute;
+        font-size: 48px;
+        animation-duration: 15s;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+        animation-iteration-count: 1;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+        opacity: 0;
+        color: #194464;
+    }
+
+    /* Car 1: Left to Right - Car faces Right */
+    .taxi-1 {
+        top: 5px;
+        animation-name: taxiLeftToRight;
+        animation-delay: 0s;
+    }
+    .taxi-1 i {
+        transform: scaleX(1);
+    }
+
+    /* Car 2: Right to Left - Car faces Left */
+    .taxi-2 {
+        top: 50px;
+        animation-name: taxiRightToLeft;
+        animation-delay: 1.5s;
+    }
+    .taxi-2 i {
+        transform: scaleX(-1);
+    }
+
+    /* Car 3: Left to Right - Car faces Right */
+    .taxi-3 {
+        top: 95px;
+        animation-name: taxiLeftToRight;
+        animation-delay: 3s;
+    }
+    .taxi-3 i {
+        transform: scaleX(1);
+    }
+
+    /* Car 4: Right to Left - Car faces Left */
+    .taxi-4 {
+        top: 140px;
+        animation-name: taxiRightToLeft;
+        animation-delay: 4.5s;
+    }
+    .taxi-4 i {
+        transform: scaleX(-1);
+    }
+
+    @keyframes taxiLeftToRight {
+        0% { 
+            left: -80px; 
+            opacity: 0;
+        }
+        3% { 
+            opacity: 1; 
+        }
+        90% { 
+            opacity: 1; 
+        }
+        100% { 
+            left: calc(100% + 20px); 
+            opacity: 0;
+        }
+    }
+
+    @keyframes taxiRightToLeft {
+        0% { 
+            right: -80px; 
+            opacity: 0;
+        }
+        3% { 
+            opacity: 1; 
+        }
+        90% { 
+            opacity: 1; 
+        }
+        100% { 
+            right: calc(100% + 20px); 
+            opacity: 0;
+        }
+    }
+
     /* ===== SUPPORT CARDS ===== */
-    .support-cards{padding:70px 0 30px}
+    .support-cards{padding:70px 0 30px; position:relative; overflow:hidden;}
     .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
 
     .card{
@@ -154,9 +268,9 @@
         position:relative;
         overflow:hidden;
         cursor:default;
+        min-height: 380px;
     }
 
-    /* Stagger delays for cards */
     .card:nth-child(1) { animation-delay: 0s; }
     .card:nth-child(2) { animation-delay: 0.1s; }
     .card:nth-child(3) { animation-delay: 0.2s; }
@@ -166,14 +280,12 @@
         100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Card hover effects */
     .card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 20px 50px rgba(11,75,115,0.1);
-        border-color: rgba(11,75,115,0.15);
+        box-shadow: 0 20px 50px rgba(7, 59, 99, 0.1);
+        border-color: rgba(7, 59, 99, 0.15);
     }
 
-    /* Shine effect on card */
     .card::before {
         content: '';
         position: absolute;
@@ -203,13 +315,19 @@
         font-size:32px;
         margin:0 auto 20px;
         transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position:relative;
+        z-index:2;
+    }
+
+    .icon .material-symbols-outlined {
+        font-size: 36px;
     }
 
     .card:hover .icon {
         transform: scale(1.1) rotate(-5deg);
         background: #0b4b73;
         color: #fff;
-        box-shadow: 0 10px 30px rgba(11,75,115,0.2);
+        box-shadow: 0 10px 30px rgba(7, 59, 99, 0.2);
     }
 
     .card h3{
@@ -217,6 +335,8 @@
         font-size:34px;
         margin-bottom:14px;
         transition: transform 0.3s ease;
+        position:relative;
+        z-index:2;
     }
 
     .card:hover h3 {
@@ -228,6 +348,8 @@
         margin-bottom:22px;
         font-size:16px;
         transition: transform 0.3s ease;
+        position:relative;
+        z-index:2;
     }
 
     .card:hover p {
@@ -244,9 +366,17 @@
         position:relative;
         overflow:hidden;
         text-decoration:none;
+        z-index:2;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
     }
 
-    /* Button shine effect for support buttons */
+    .support-btn .material-symbols-outlined {
+        font-size: 22px;
+    }
+
     .support-btn::before {
         content: '';
         position: absolute;
@@ -278,8 +408,16 @@
         font-weight:700;
         font-size:18px;
         transition: all 0.3s ease;
-        display:inline-block;
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
         text-decoration:none;
+        position:relative;
+        z-index:2;
+    }
+
+    .email .material-symbols-outlined {
+        font-size: 24px;
     }
 
     .email:hover {
@@ -292,6 +430,8 @@
         font-weight:500;
         margin:18px 0 22px;
         transition: all 0.3s ease;
+        position:relative;
+        z-index:2;
     }
 
     .card:hover .address {
@@ -310,6 +450,7 @@
         transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         overflow:hidden;
         position:relative;
+        z-index:2;
     }
 
     .map-box::before {
@@ -341,6 +482,13 @@
         text-decoration:none;
         position:relative;
         z-index:1;
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+    }
+
+    .map-btn .material-symbols-outlined {
+        font-size: 22px;
     }
 
     .map-btn:hover {
@@ -348,6 +496,70 @@
         box-shadow: 0 12px 30px rgba(11,75,115,0.15);
         background: #0b4b73;
         color: #fff;
+    }
+
+    /* ===== ICON DROP ANIMATIONS - Only on hover, but don't stop ===== */
+    .drop-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+        border-radius: 22px;
+    }
+
+    .drop-icon {
+        position: absolute;
+        font-size: 22px;
+        opacity: 0;
+        top: -30px;
+        animation: none;
+    }
+
+    .drop-icon .material-symbols-outlined {
+        font-size: inherit;
+    }
+
+    /* Icons animate only when card is hovered */
+    .card:hover .drop-icon {
+        animation: dropDown 3.5s ease-in infinite;
+    }
+
+    @keyframes dropDown {
+        0% {
+            transform: translateY(0px) scale(0.5) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 1;
+            transform: translateY(10px) scale(1) rotate(5deg);
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(calc(100% + 50px)) scale(0.8) rotate(-10deg);
+            opacity: 0;
+        }
+    }
+
+    /* Different colors for different cards */
+    .card:nth-child(1) .drop-icon {
+        color: #0b4b73;
+        font-size: 20px;
+    }
+
+    .card:nth-child(2) .drop-icon {
+        color: #0b4b73;
+        font-size: 20px;
+    }
+
+    .card:nth-child(3) .drop-icon {
+        color: #0b4b73;
+        font-size: 22px;
     }
 
     /* ===== FAQ SECTION ===== */
@@ -419,6 +631,10 @@
         align-items:center;
         gap:10px;
         transition: transform 0.3s ease;
+    }
+
+    .faq-section h3 .material-symbols-outlined {
+        font-size: 32px;
     }
 
     .faq-section:hover h3 {
@@ -502,7 +718,9 @@
     }
 
     .agent-btn{
-        display:inline-block;
+        display:inline-flex;
+        align-items:center;
+        gap:10px;
         background:#0b4b73;
         color:#fff;
         padding:16px 34px;
@@ -514,7 +732,10 @@
         overflow:hidden;
     }
 
-    /* Button shine effect */
+    .agent-btn .material-symbols-outlined {
+        font-size: 24px;
+    }
+
     .agent-btn::before {
         content: '';
         position: absolute;
@@ -548,9 +769,17 @@
         .card:nth-child(1) { animation-delay: 0s; }
         .card:nth-child(2) { animation-delay: 0.08s; }
         .card:nth-child(3) { animation-delay: 0.16s; }
+        .taxi { font-size: 36px !important; }
+        .taxi-container { height: 160px; top: 5px; }
+        .taxi-1 { top: 5px; }
+        .taxi-2 { top: 42px; }
+        .taxi-3 { top: 78px; }
+        .taxi-4 { top: 114px; }
+        .taxi i { font-size: 36px !important; }
+        .drop-icon { font-size: 18px !important; }
     }
     @media(max-width:576px){
-        .hero{padding:70px 0}
+        .hero{padding:70px 0; min-height:400px;}
         .hero h1{font-size:38px}
         .hero p{font-size:18px}
         .search-box{flex-direction:column}
@@ -565,44 +794,130 @@
         .agent-btn:hover {
             transform: translateY(-3px) scale(1.02);
         }
+        .taxi-container { height: 120px; top: 5px; }
+        .taxi-1 { top: 5px; }
+        .taxi-2 { top: 32px; }
+        .taxi-3 { top: 58px; }
+        .taxi-4 { top: 84px; }
+        .taxi i { font-size: 26px !important; }
+        .drop-icon { font-size: 14px !important; }
+        .card { min-height: 320px; padding: 24px; }
     }
 </style>
 @endpush
     
 @section('content')
     <section class="hero">
-        <div class="container">
+        <!-- ===== 4 TAXI CARS ===== -->
+        <div class="taxi-container">
+            <!-- Car 1: Left to Right - White, faces Right -->
+            <div class="taxi taxi-1">
+                <i class="fa-solid fa-car-side"></i>
+            </div>
+            
+            <!-- Car 2: Right to Left - White, faces Left -->
+            <div class="taxi taxi-2">
+                <i class="fa-solid fa-car-side"></i>
+            </div>
+            
+            <!-- Car 3: Left to Right - White, faces Right -->
+            <div class="taxi taxi-3">
+                <i class="fa-solid fa-car-side"></i>
+            </div>
+            
+            <!-- Car 4: Right to Left - White, faces Left -->
+            <div class="taxi taxi-4">
+                <i class="fa-solid fa-car-side"></i>
+            </div>
+        </div>
+
+        <div class="container" style="position:relative;z-index:2;">
             <h1>Help Center</h1>
             <p>We're here to ensure your journey is seamless. Find answers or reach out to our dedicated support team.</p>
             <form method="GET" action="{{ route('support') }}" class="search-box">
                 <input name="search" value="{{ $search }}" type="search" placeholder="How can we help you today?" />
-                <button type="submit" aria-label="Search FAQs">🔍</button>
+                <button type="submit" aria-label="Search FAQs">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
             </form>
         </div>
     </section>
 
     <section class="support-cards">
         <div class="container card-grid">
+            <!-- ===== CARD 1: Live Support - Icons drop on hover, don't stop ===== -->
             <div class="card">
-                <div class="icon">💬</div>
-                <h3>Live Support</h3>
-                <p>Connect with us instantly via Viber or WhatsApp for real-time assistance.</p>
-                <a href="{{ route('support') }}#contact" class="support-btn viber">📱 Viber Support</a>
-                <a href="{{ route('support') }}#contact" class="support-btn whatsapp">📞 WhatsApp Support</a>
+                <div class="drop-container">
+                    <span class="drop-icon" style="left:15%;animation-delay:0s;"><span class="material-symbols-outlined">chat</span></span>
+                    <span class="drop-icon" style="left:40%;animation-delay:0.7s;"><span class="material-symbols-outlined">forum</span></span>
+                    <span class="drop-icon" style="left:65%;animation-delay:1.4s;"><span class="material-symbols-outlined">chat</span></span>
+                    <span class="drop-icon" style="left:30%;animation-delay:2.1s;"><span class="material-symbols-outlined">call</span></span>
+                    <span class="drop-icon" style="left:80%;animation-delay:2.8s;"><span class="material-symbols-outlined">forum</span></span>
+                    <span class="drop-icon" style="left:20%;animation-delay:3.5s;"><span class="material-symbols-outlined">chat</span></span>
+                    <span class="drop-icon" style="left:55%;animation-delay:4.2s;"><span class="material-symbols-outlined">call</span></span>
+                    <span class="drop-icon" style="left:90%;animation-delay:4.9s;"><span class="material-symbols-outlined">chat</span></span>
+                </div>
+                <div class="icon" style="position:relative;z-index:2;">
+                    <span class="material-symbols-outlined">chat</span>
+                </div>
+                <h3 style="position:relative;z-index:2;">Live Support</h3>
+                <p style="position:relative;z-index:2;">Connect with us instantly via Viber or WhatsApp for real-time assistance.</p>
+                <a href="{{ route('support') }}#contact" class="support-btn viber" style="position:relative;z-index:2;">
+                    <span class="material-symbols-outlined">chat</span>
+                    Viber Support
+                </a>
+                <a href="{{ route('support') }}#contact" class="support-btn whatsapp" style="position:relative;z-index:2;">
+                    <span class="material-symbols-outlined">forum</span>
+                    WhatsApp Support
+                </a>
             </div>
+
+            <!-- ===== CARD 2: Email Inquiry - Icons drop on hover, don't stop ===== -->
             <div class="card">
-                <div class="icon">✉️</div>
-                <h3>Email Inquiry</h3>
-                <p>Prefer writing? Our team typically responds within 2 business hours.</p>
-                <a href="mailto:support@novamobility.com" class="email">support@novamobility.com</a>
+                <div class="drop-container">
+                    <span class="drop-icon" style="left:20%;animation-delay:0.3s;"><span class="material-symbols-outlined">mail</span></span>
+                    <span class="drop-icon" style="left:50%;animation-delay:1.0s;"><span class="material-symbols-outlined">mail</span></span>
+                    <span class="drop-icon" style="left:75%;animation-delay:1.7s;"><span class="material-symbols-outlined">mail</span></span>
+                    <span class="drop-icon" style="left:35%;animation-delay:2.4s;"><span class="material-symbols-outlined">mail</span></span>
+                    <span class="drop-icon" style="left:60%;animation-delay:3.1s;"><span class="material-symbols-outlined">mail</span></span>
+                    <span class="drop-icon" style="left:85%;animation-delay:3.8s;"><span class="material-symbols-outlined">mail</span></span>
+                    <span class="drop-icon" style="left:45%;animation-delay:4.5s;"><span class="material-symbols-outlined">mail</span></span>
+                    <span class="drop-icon" style="left:15%;animation-delay:5.2s;"><span class="material-symbols-outlined">mail</span></span>
+                </div>
+                <div class="icon" style="position:relative;z-index:2;">
+                    <span class="material-symbols-outlined">mail</span>
+                </div>
+                <h3 style="position:relative;z-index:2;">Email Inquiry</h3>
+                <p style="position:relative;z-index:2;">Prefer writing? Our team typically responds within 2 business hours.</p>
+                <a href="mailto:support@novamobility.com" class="email" style="position:relative;z-index:2;">
+                    <span class="material-symbols-outlined">mail</span>
+                    support@novamobility.com
+                </a>
             </div>
+
+            <!-- ===== CARD 3: Location - Icons drop on hover, don't stop ===== -->
             <div class="card" id="contact">
-                <div class="icon">📍</div>
-                <h3>Main Hub</h3>
-                <p>Visit our flagship terminal for ticketing and premium lounge services.</p>
-                <div class="address">No. 124, Pyay Road,<br>Mayangone Township, Yangon.</div>
-                <div class="map-box">
-                    <a href="{{ route('support') }}#contact" class="map-btn">View on Map</a>
+                <div class="drop-container">
+                    <span class="drop-icon" style="left:25%;animation-delay:0.6s;"><span class="material-symbols-outlined">security</span></span>
+                    <span class="drop-icon" style="left:55%;animation-delay:1.3s;"><span class="material-symbols-outlined">payments</span></span>
+                    <span class="drop-icon" style="left:85%;animation-delay:2.0s;"><span class="material-symbols-outlined">security</span></span>
+                    <span class="drop-icon" style="left:45%;animation-delay:2.7s;"><span class="material-symbols-outlined">payments</span></span>
+                    <span class="drop-icon" style="left:70%;animation-delay:3.4s;"><span class="material-symbols-outlined">security</span></span>
+                    <span class="drop-icon" style="left:35%;animation-delay:4.1s;"><span class="material-symbols-outlined">payments</span></span>
+                    <span class="drop-icon" style="left:65%;animation-delay:4.8s;"><span class="material-symbols-outlined">security</span></span>
+                    <span class="drop-icon" style="left:90%;animation-delay:5.5s;"><span class="material-symbols-outlined">payments</span></span>
+                </div>
+                <div class="icon" style="position:relative;z-index:2;">
+                    <span class="material-symbols-outlined">payments</span>
+                </div>
+                <h3 style="position:relative;z-index:2;">Main Hub</h3>
+                <p style="position:relative;z-index:2;">Visit our flagship terminal for ticketing and premium lounge services.</p>
+                <div class="address" style="position:relative;z-index:2;">No. 124, Pyay Road,<br>Mayangone Township, Yangon.</div>
+                <div class="map-box" style="position:relative;z-index:2;">
+                    <a href="{{ route('support') }}#contact" class="map-btn">
+                        <span class="material-symbols-outlined">location_on</span>
+                        View on Map
+                    </a>
                 </div>
             </div>
         </div>
@@ -613,7 +928,16 @@
             <h2>Frequently Asked Questions</h2>
             @forelse ($faqs->groupBy('category') as $category => $categoryFaqs)
                 <div class="faq-section">
-                    <h3>{{ $category === 'Billing' ? '💳' : ($category === 'Technical' ? '🚌' : '🛡️') }} {{ $category }}</h3>
+                    <h3>
+                        @if($category === 'Billing')
+                            <span class="material-symbols-outlined">payments</span>
+                        @elseif($category === 'Technical')
+                            <span class="material-symbols-outlined">security</span>
+                        @else
+                            <span class="material-symbols-outlined">chat</span>
+                        @endif
+                        {{ $category }}
+                    </h3>
                     @foreach ($categoryFaqs as $faq)
                         <details>
                             <summary>{{ $faq->question }}</summary>
@@ -626,8 +950,34 @@
             @endforelse
             <div class="agent">
                 <p>Can't find what you're looking for?</p>
-                <a href="{{ route('support') }}#contact" class="agent-btn">Talk to an Agent</a>
+                <a href="{{ route('support') }}#contact" class="agent-btn">
+                    <span class="material-symbols-outlined">chat</span>
+                    Talk to an Agent
+                </a>
             </div>
         </div>
     </section>
+
+    <!-- ===== JavaScript to restart taxi animation ===== -->
+    <script>
+        function restartTaxiAnimation() {
+            const taxis = document.querySelectorAll('.taxi');
+            taxis.forEach(taxi => {
+                // Reset animation
+                taxi.style.animation = 'none';
+                taxi.style.opacity = '0';
+                // Force reflow
+                void taxi.offsetWidth;
+                // Reapply animation
+                taxi.style.animation = '';
+                taxi.style.opacity = '';
+            });
+        }
+
+        // Initial start after page loads
+        setTimeout(restartTaxiAnimation, 500);
+
+        // Restart every 30 seconds (15s drive + 15s stop)
+        let restartInterval = setInterval(restartTaxiAnimation, 30000);
+    </script>
 @endsection

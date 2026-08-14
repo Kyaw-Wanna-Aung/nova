@@ -24,12 +24,16 @@
         <!-- Cards Section with Scroll Animation -->
         <section class="cards">
             <div class="card animate-zoom">
-                <div class="icon">👁</div>
-                <h3>Our Vision</h3>
+                <div class="icon">
+                    <span class="material-symbols-outlined">visibility</span>
+                </div>
+                <h3>Our Vision</h3> 
                 <p>{{ $visionMission?->vision }}</p>
             </div>
             <div class="card dark animate-zoom">
-                <div class="icon">🚩</div>
+                <div class="icon">
+                    <span class="material-symbols-outlined">flag</span>
+                </div>
                 <h3>Our Mission</h3>
                 <p>{{ $visionMission?->mission }}</p>
             </div>
@@ -67,9 +71,33 @@
             <div class="network-text">
                 <h2>Our Network</h2>
                 <p>Operating from strategic hubs across the country, our terminals are designed as premium lounges, ensuring your journey begins in comfort long before you board.</p>
-                <div class="branch animate-stagger"><div class="branch-icon">📍</div><div><h4>Yangon Branch (HQ)</h4><span>Downtown Financial District</span></div></div>
-                <div class="branch animate-stagger"><div class="branch-icon">📍</div><div><h4>Mandalay Branch</h4><span>Central Station Terminal</span></div></div>
-                <div class="branch animate-stagger"><div class="branch-icon">📍</div><div><h4>Naypyidaw Hub</h4><span>Capital Access Point</span></div></div>
+                <div class="branch animate-stagger">
+                    <div class="branch-icon">
+                        <span class="material-symbols-outlined">location_on</span>
+                    </div>
+                    <div>
+                        <h4>Yangon Branch (HQ)</h4>
+                        <span>Downtown Financial District</span>
+                    </div>
+                </div>
+                <div class="branch animate-stagger">
+                    <div class="branch-icon">
+                        <span class="material-symbols-outlined">location_on</span>
+                    </div>
+                    <div>
+                        <h4>Mandalay Branch</h4>
+                        <span>Central Station Terminal</span>
+                    </div>
+                </div>
+                <div class="branch animate-stagger">
+                    <div class="branch-icon">
+                        <span class="material-symbols-outlined">location_on</span>
+                    </div>
+                    <div>
+                        <h4>Naypyidaw Hub</h4>
+                        <span>Capital Access Point</span>
+                    </div>
+                </div>
             </div>
             <div class="network-image animate-slide-right">
                 <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" alt="Nova Vehicle" />
@@ -79,6 +107,14 @@
 
     <!-- Styles for Advanced Animations & Cinematic Slider -->
     <style>
+        /* ===== MATERIAL SYMBOLS SETUP ===== */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+            font-size: inherit;
+            line-height: 1;
+            display: inline-block;
+        }
+
         /* ===== CINEMATIC CROSSFADE HERO SLIDER ===== */
         .hero {
             position: relative;
@@ -157,11 +193,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 0 20px 0; /* Updated from '0 auto 20px' to align left */
+            margin: 0 0 20px 0;
             background: rgba(0, 114, 255, 0.08);
             border-radius: 50%;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             flex-shrink: 0;
+        }
+
+        .icon .material-symbols-outlined {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            color: #073b63;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card.dark .icon .material-symbols-outlined {
+            color: #ffffff;
+        }
+
+        .card:hover .icon .material-symbols-outlined {
+            transform: scale(1.1);
         }
 
         .branch-icon {
@@ -170,6 +220,17 @@
             width: clamp(40px, 5vw, 50px);
             text-align: center;
             transition: all 0.3s ease;
+        }
+
+        .branch-icon .material-symbols-outlined {
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            color: #073b63;
+            transition: all 0.3s ease;
+        }
+
+        .branch:hover .branch-icon .material-symbols-outlined {
+            transform: scale(1.2) rotate(-5deg);
+            color: #0056b3;
         }
 
         /* ===== SECTION ANIMATION MODELS ===== */
@@ -231,7 +292,7 @@
             padding: 30px 25px;
             background: #fff;
             border-radius: 20px;
-            text-align: left; /* Updated from 'center' to 'left' */
+            text-align: left;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
         }
 
@@ -442,8 +503,9 @@
             background: rgba(0, 114, 255, 0.04);
         }
 
-        .branch:hover .branch-icon {
+        .branch:hover .branch-icon .material-symbols-outlined {
             transform: scale(1.2) rotate(-5deg);
+            color: #0056b3;
         }
 
         .branch h4 {
