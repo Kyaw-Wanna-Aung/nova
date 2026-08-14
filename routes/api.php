@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\FaqController as ApiFaqController;
 use App\Http\Controllers\Admin\HeroBannerController as AdminHeroBannerController;
 use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 use App\Http\Controllers\Api\TestimonialController as ApiTestimonialController;
-
+use App\Http\Controllers\Api\BlogController as ApiBlogController;
 /*
 |--------------------------------------------------------------------------
 | Public API Endpoints
@@ -24,6 +24,12 @@ Route::get('/hero-banner', [ApiHeroBannerController::class, 'show']);
 Route::get('/routes', [ApiRouteController::class, 'index']);
 Route::get('/testimonials', [ApiTestimonialController::class, 'index']);
 Route::get('/faqs', [ApiFaqController::class, 'index']);
+Route::get('/blogs', [ApiBlogController::class, 'index']);
+
+Route::get(
+    '/blogs/{blog:slug}',
+    [ApiBlogController::class, 'show']
+);
 /*
 |--------------------------------------------------------------------------
 | Admin API Authentication

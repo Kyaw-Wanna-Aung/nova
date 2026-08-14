@@ -10,7 +10,20 @@ class BlogSection extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image', 'title', 'message', 'sort_order'];
+    protected $fillable = [
+        'blog_id',
+        'image',
+        'title',
+        'message',
+        'sort_order',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'sort_order' => 'integer',
+        ];
+    }
 
     public function blog(): BelongsTo
     {
