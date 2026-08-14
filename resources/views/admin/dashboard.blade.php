@@ -9,8 +9,9 @@
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
         <div>
             <p class="text-sm text-gray-500 font-medium">Total Routes</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">12</h3>
-        </div>
+         <h3 class="text-2xl font-bold text-gray-800 mt-1">
+    {{ $totalRoutes }}
+</h3>      </div>
         <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold">
             🗺️
         </div>
@@ -20,8 +21,9 @@
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
         <div>
             <p class="text-sm text-gray-500 font-medium">Promotions</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">5</h3>
-        </div>
+         <h3 class="text-2xl font-bold text-gray-800 mt-1">
+    {{ $totalPromotions }}
+</h3>     </div>
         <div class="w-12 h-12 bg-green-50 text-green-600 rounded-lg flex items-center justify-center font-bold">
             🏷️
         </div>
