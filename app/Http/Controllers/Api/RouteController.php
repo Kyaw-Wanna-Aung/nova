@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RouteResource;
 use App\Models\RouteManagement;
+use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -45,10 +46,9 @@ class RouteController extends Controller
             ->orderBy('departure_time')
             ->get();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Routes retrieved successfully.',
-            'data' => RouteResource::collection($routes),
-        ]);
+        return ApiResponse::success(
+            RouteResource::collection($routes),
+            'Routes retrieved successfully.'
+        );
     }
 }

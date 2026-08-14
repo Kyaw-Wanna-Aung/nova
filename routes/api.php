@@ -1,16 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Admin\HeroBannerController as AdminHeroBannerController;
+use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 use App\Http\Controllers\Api\AdminAuthController as ApiAdminAuthController;
+use App\Http\Controllers\Api\BlogController as ApiBlogController;
+use App\Http\Controllers\Api\FaqController as ApiFaqController;
 use App\Http\Controllers\Api\HeroBannerController as ApiHeroBannerController;
 use App\Http\Controllers\Api\PromotionController as ApiPromotionController;
 use App\Http\Controllers\Api\RouteController as ApiRouteController;
-use App\Http\Controllers\Api\FaqController as ApiFaqController;
-use App\Http\Controllers\Admin\HeroBannerController as AdminHeroBannerController;
-use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 use App\Http\Controllers\Api\TestimonialController as ApiTestimonialController;
-use App\Http\Controllers\Api\BlogController as ApiBlogController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Public API Endpoints
@@ -38,7 +38,6 @@ Route::get(
 
 Route::post('/admin/login', [ApiAdminAuthController::class, 'login']);
 
-
 /*
 |--------------------------------------------------------------------------
 | Protected Admin API Endpoints
@@ -61,7 +60,6 @@ Route::middleware('auth:sanctum')
 
         Route::post('/register', [ApiAdminAuthController::class, 'register']);
 
-
         /*
         |--------------------------------------------------------------------------
         | Hero Banner Management
@@ -73,7 +71,6 @@ Route::middleware('auth:sanctum')
             '/hero-banner',
             [AdminHeroBannerController::class, 'update']
         );
-
 
         /*
         |--------------------------------------------------------------------------

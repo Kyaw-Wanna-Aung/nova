@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PromotionResource;
 use App\Models\Promotion;
+use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 class PromotionController extends Controller
@@ -15,10 +16,9 @@ class PromotionController extends Controller
             ->latest()
             ->get();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Promotions retrieved successfully.',
-            'data' => PromotionResource::collection($promotions),
-        ]);
+        return ApiResponse::success(
+            PromotionResource::collection($promotions),
+            'Promotions retrieved successfully.'
+        );
     }
 }

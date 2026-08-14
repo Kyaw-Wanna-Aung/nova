@@ -66,7 +66,7 @@ class BlogApiTest extends TestCase
         ]);
 
         $response = $this->getJson(
-            '/api/blogs?category=' . urlencode('Travel Guides')
+            '/api/blogs?category='.urlencode('Travel Guides')
         );
 
         $response
@@ -140,6 +140,15 @@ class BlogApiTest extends TestCase
 
         $this->getJson('/api/blogs/draft-blog')
             ->assertNotFound();
+    }
+
+    public function test_missing_blog_uses_standard_error_format(): void
+    {
+        $this->getJson('/api/blogs/missing-blog')
+            ->assertNotFound()
+            ->assertJsonPath('success', false)
+            ->assertJsonPath('message', 'Blog not found.')
+            ->assertJsonPath('data', null);
     }
 
     public function test_blog_sections_are_returned_in_sort_order(): void

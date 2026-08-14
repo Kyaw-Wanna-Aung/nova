@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TestimonialResource;
 use App\Models\Testimonial;
+use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 class TestimonialController extends Controller
@@ -18,10 +19,9 @@ class TestimonialController extends Controller
             ->latest('id')
             ->get();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Testimonials retrieved successfully.',
-            'data' => TestimonialResource::collection($testimonials),
-        ]);
+        return ApiResponse::success(
+            TestimonialResource::collection($testimonials),
+            'Testimonials retrieved successfully.',
+        );
     }
 }

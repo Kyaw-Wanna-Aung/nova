@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FaqResource;
 use App\Models\Faq;
+use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -32,10 +33,9 @@ class FaqController extends Controller
             ->orderBy('id')
             ->get();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'FAQs retrieved successfully.',
-            'data' => FaqResource::collection($faqs),
-        ]);
+        return ApiResponse::success(
+            FaqResource::collection($faqs),
+            'FAQs retrieved successfully.',
+        );
     }
 }

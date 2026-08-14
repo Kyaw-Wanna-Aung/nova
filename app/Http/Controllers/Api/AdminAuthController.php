@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -23,23 +24,18 @@ class AdminAuthController extends Controller
             ->first();
 
         if (
-            !$admin ||
-            !Hash::check($validated['password'], $admin->password)
+            ! $admin ||
+            ! Hash::check($validated['password'], $admin->password)
         ) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid email or password.',
-            ], 422);
+            return ApiResponse::error('Invalid email or password.', 422);
         }
 
         $token = $admin->createToken(
             $validated['device_name'] ?? 'admin-api'
         )->plainTextToken;
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Login successful.',
-            'data' => [
+        return ApiResponse::success(
+            [
                 'admin' => [
                     'id' => $admin->id,
                     'name' => $admin->name,
@@ -49,23 +45,23 @@ class AdminAuthController extends Controller
                 'token' => $token,
                 'token_type' => 'Bearer',
             ],
-        ]);
+            'Login successful.',
+        );
     }
 
     public function me(Request $request): JsonResponse
     {
         $admin = $request->user();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Admin profile retrieved successfully.',
-            'data' => [
+        return ApiResponse::success(
+            [
                 'id' => $admin->id,
                 'name' => $admin->name,
                 'email' => $admin->email,
                 'phone' => $admin->phone,
             ],
-        ]);
+            'Admin profile retrieved successfully.',
+        );
     }
 
     public function logout(Request $request): JsonResponse
@@ -74,10 +70,7 @@ class AdminAuthController extends Controller
             ?->currentAccessToken()
             ?->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Logged out successfully.',
-        ]);
+        return ApiResponse::success(message: 'Logged out successfully.');
     }
 
     public function register(Request $request): JsonResponse
@@ -96,15 +89,15 @@ class AdminAuthController extends Controller
             'password' => $validated['password'],
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Admin created successfully.',
-            'data' => [
+        return ApiResponse::success(
+            [
                 'id' => $admin->id,
                 'name' => $admin->name,
                 'email' => $admin->email,
                 'phone' => $admin->phone,
             ],
-        ], 201);
+            'Admin created successfully.',
+            201,
+        );
     }
 }

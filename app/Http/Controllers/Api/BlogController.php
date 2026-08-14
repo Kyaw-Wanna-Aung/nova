@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BlogDetailResource;
 use App\Http\Resources\BlogResource;
 use App\Models\Blog;
+use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -42,39 +43,31 @@ class BlogController extends Controller
             ->latest('published_at')
             ->paginate(9);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Blogs retrieved successfully.',
-
-            'data' => BlogResource::collection(
+        return ApiResponse::success(
+            BlogResource::collection(
                 $blogs->getCollection()
             ),
-
-            'meta' => [
+            'Blogs retrieved successfully.',
+            additional: ['meta' => [
                 'current_page' => $blogs->currentPage(),
                 'last_page' => $blogs->lastPage(),
                 'per_page' => $blogs->perPage(),
                 'total' => $blogs->total(),
-            ],
-        ]);
+            ]],
+        );
     }
 
     public function show(Blog $blog): JsonResponse
     {
-        if (!$blog->published_at) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Blog not found.',
-                'data' => null,
-            ], 404);
+        if (! $blog->published_at) {
+            return ApiResponse::error('Blog not found.', 404);
         }
 
         $blog->load('sections');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Blog retrieved successfully.',
-            'data' => new BlogDetailResource($blog),
-        ]);
+        return ApiResponse::success(
+            new BlogDetailResource($blog),
+            'Blog retrieved successfully.',
+        );
     }
 }

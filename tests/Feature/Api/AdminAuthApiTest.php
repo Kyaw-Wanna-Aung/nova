@@ -65,7 +65,21 @@ class AdminAuthApiTest extends TestCase
 
         $response
             ->assertStatus(422)
-            ->assertJsonPath('success', false);
+            ->assertJsonPath('success', false)
+            ->assertJsonPath('data', null);
+    }
+
+    public function test_admin_login_validation_uses_standard_error_format(): void
+    {
+        $this->postJson('/api/admin/login', [])
+            ->assertUnprocessable()
+            ->assertJsonPath('success', false)
+            ->assertJsonPath('message', 'Validation failed.')
+            ->assertJsonStructure([
+                'data' => [
+                    'errors' => ['email', 'password'],
+                ],
+            ]);
     }
 
     public function test_authenticated_admin_can_get_profile(): void
@@ -97,39 +111,43 @@ class AdminAuthApiTest extends TestCase
     public function test_unauthenticated_user_cannot_get_admin_profile(): void
     {
         $this->getJson('/api/admin/me')
+            ->assertUnauthorized()
+            ->assertJsonPath('success', false)
+            ->assertJsonPath('data', null);
+    }
+
+    public function test_admin_can_logout(): void
+    {
+        $admin = Admin::create([
+            'name' => 'Nova Admin',
+            'email' => 'admin@nova.test',
+            'phone' => '09123456789',
+            'password' => 'password123',
+        ]);
+
+        $token = $admin
+            ->createToken('test-device')
+            ->plainTextToken;
+
+        $this
+            ->withToken($token)
+            ->postJson('/api/admin/logout')
+            ->assertOk()
+            ->assertJsonPath('success', true);
+
+        // Confirm the token was actually revoked from the database.
+        $this->assertDatabaseCount('personal_access_tokens', 0);
+
+        // Sanctum may cache the authenticated user between requests
+        // inside the same feature test, so reset Laravel's auth guards.
+        $this->app['auth']->forgetGuards();
+
+        $this
+            ->withToken($token)
+            ->getJson('/api/admin/me')
             ->assertUnauthorized();
     }
-public function test_admin_can_logout(): void
-{
-    $admin = Admin::create([
-        'name' => 'Nova Admin',
-        'email' => 'admin@nova.test',
-        'phone' => '09123456789',
-        'password' => 'password123',
-    ]);
 
-    $token = $admin
-        ->createToken('test-device')
-        ->plainTextToken;
-
-    $this
-        ->withToken($token)
-        ->postJson('/api/admin/logout')
-        ->assertOk()
-        ->assertJsonPath('success', true);
-
-    // Confirm the token was actually revoked from the database.
-    $this->assertDatabaseCount('personal_access_tokens', 0);
-
-    // Sanctum may cache the authenticated user between requests
-    // inside the same feature test, so reset Laravel's auth guards.
-    $this->app['auth']->forgetGuards();
-
-    $this
-        ->withToken($token)
-        ->getJson('/api/admin/me')
-        ->assertUnauthorized();
-}
     public function test_authenticated_admin_can_register_another_admin(): void
     {
         $admin = Admin::create([
