@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\RouteManagementController;
+use App\Http\Controllers\Admin\TravelRouteController;
 use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\TestimonialController;
@@ -65,14 +65,25 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/register', [AdminAuthController::class, 'showRegisterForm'])->name('register.form');
     Route::post('/register', [AdminAuthController::class, 'registerAdmin'])->name('register');
     // 3. Route Management Module (route-management)
-    Route::resource('route-management', RouteManagementController::class)->except(['create', 'show']);
-    Route::patch('/route-management/{routeManagement}/status', [RouteManagementController::class, 'changeStatus'])
-        ->name('route-management.status');
-    Route::post('/route-management/bulk-action', [RouteManagementController::class, 'bulkAction'])
-        ->name('route-management.bulk-action');
-    Route::get('/route-management-export', [RouteManagementController::class, 'export'])
-        ->name('route-management.export');
+  Route::get(
+    '/route-management',
+    [TravelRouteController::class, 'index']
+)->name('route-management.index');
 
+Route::post(
+    '/route-management',
+    [TravelRouteController::class, 'store']
+)->name('route-management.store');
+
+Route::put(
+    '/route-management/{travelRoute}',
+    [TravelRouteController::class, 'update']
+)->name('route-management.update');
+
+Route::delete(
+    '/route-management/{travelRoute}',
+    [TravelRouteController::class, 'destroy']
+)->name('route-management.destroy');
     // 4. Hero Banner Management
     Route::get('/hero-banner/edit', [HeroBannerController::class, 'edit'])->name('hero-banner.edit');
     Route::match(['put', 'post'], '/hero-banner', [HeroBannerController::class, 'update'])->name('hero-banner.update');
