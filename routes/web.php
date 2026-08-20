@@ -15,6 +15,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\User\BlogController as UserBlogController;
 use App\Http\Controllers\User\RouteController as UserRouteController;
+use App\Http\Controllers\Admin\RouteScheduleController;
+use App\Http\Controllers\Admin\AuthUserController; // <-- အသစ်ထည့်ထားသော Controller
 
 /*
 |--------------------------------------------------------------------------
@@ -30,9 +32,6 @@ Route::get('/blog/all', [UserBlogController::class, 'all'])->name('blog.all');
 Route::get('/blog/{blog:slug}', [UserBlogController::class, 'show'])->name('blog.show');
 Route::get('/our-routes', [UserRouteController::class, 'index'])->name('our-routes');
 
-// Public Guest Views
-// Route::get('/routes', [RouteController::class, 'index'])->name('routes.index');
-// Route::get('/routes/{route}', [RouteController::class, 'show'])->name('routes.show');
 Route::get('/hero-banner', [HeroBannerController::class, 'show'])->name('hero-banner.show');
 Route::get('/promotions', [HomeController::class, 'promotions'])->name('promotions.index');
 Route::post('/newsletter/subscribe', [NewsletterSubscriptionController::class, 'store'])->name('newsletter.subscribe');
@@ -54,7 +53,7 @@ Route::prefix('admin')->group(function () {
 | Admin Protected Routes (Logged-in Admin Only)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
 
     // 1. Dashboard & Profile
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -64,27 +63,20 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     // 2. Admin Management
     Route::get('/register', [AdminAuthController::class, 'showRegisterForm'])->name('register.form');
     Route::post('/register', [AdminAuthController::class, 'registerAdmin'])->name('register');
-    // 3. Route Management Module (route-management)
-  Route::get(
-    '/route-management',
-    [TravelRouteController::class, 'index']
-)->name('route-management.index');
-
-Route::post(
-    '/route-management',
-    [TravelRouteController::class, 'store']
-)->name('route-management.store');
-
-Route::put(
-    '/route-management/{travelRoute}',
-    [TravelRouteController::class, 'update']
-)->name('route-management.update');
-
-Route::delete(
-    '/route-management/{travelRoute}',
-    [TravelRouteController::class, 'destroy']
-)->name('route-management.destroy');
-    // 4. Hero Banner Management
+    
+    // 3. Route Management Module
+    Route::get('/route-management', [TravelRouteController::class, 'index'])->name('route-management.index');
+    Route::post('/route-management', [TravelRouteController::class, 'store'])->name('route-management.store');
+    Route::put('/route-management/{travelRoute}', [TravelRouteController::class, 'update'])->name('route-management.update');
+    Route::delete('/route-management/{travelRoute}', [TravelRouteController::class, 'destroy'])->name('route-management.destroy');
+    
+    // 4. Route Schedule Management
+    Route::get('/route-schedules', [RouteScheduleController::class, 'index'])->name('route-schedules.index');
+    Route::post('/route-schedules', [RouteScheduleController::class, 'store'])->name('route-schedules.store');
+    Route::put('/route-schedules/{routeSchedule}', [RouteScheduleController::class, 'update'])->name('route-schedules.update');
+    Route::delete('/route-schedules/{routeSchedule}', [RouteScheduleController::class, 'destroy'])->name('route-schedules.destroy');
+    
+    // 5. Hero Banner Management
     Route::get('/hero-banner/edit', [HeroBannerController::class, 'edit'])->name('hero-banner.edit');
     Route::match(['put', 'post'], '/hero-banner', [HeroBannerController::class, 'update'])->name('hero-banner.update');
 
@@ -114,8 +106,18 @@ Route::delete(
 
     // 11. Website Blog Management
     Route::resource('blog', AdminBlogController::class)->except(['create', 'show']);
+
+    // 12. User & Role Management Module
+    Route::get('/users', [AuthUserController::class, 'index'])->name('users.index');
+    Route::post('/users', [AuthUserController::class, 'storeUser'])->name('users.store');
+    Route::put('/users/{user}', [AuthUserController::class, 'updateUser'])->name('users.update');       // <--- အသစ်ထည့်ရန်
+    Route::delete('/users/{user}', [AuthUserController::class, 'destroyUser'])->name('users.destroy'); // <--- အသစ်ထည့်ရန်
+    
+    Route::post('/roles', [AuthUserController::class, 'storeRole'])->name('roles.store');
+    Route::post('/roles/permissions', [AuthUserController::class, 'assignPermissions'])->name('roles.permissions');
+    Route::post('/users/{user}/permissions', [AuthUserController::class, 'updateUserPermissions'])->name('users.permissions'); // <--- အသစ်ထည့်ရန်
 });
+
 Route::get('/phpinfo', function () {
     return phpinfo();
 });
-

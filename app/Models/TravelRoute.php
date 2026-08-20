@@ -11,6 +11,8 @@ class TravelRoute extends Model
 {
     use HasFactory;
 
+    protected $table = 'travel_routes';
+
     protected $fillable = [
         'route_name',
         'departure_id',

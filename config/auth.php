@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\User;
-use App\Models\Admin;
+use App\Models\AuthUser; // AuthUser Model ကို သုံးရန် ချိတ်ခြင်း
 
 return [
 
@@ -27,10 +26,6 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'admin' => [
-            'driver' => 'session',
-            'provider' => 'admins',
-        ],
     ],
 
     /*
@@ -42,11 +37,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
-        ],
-        'admins' => [
-            'driver' => 'eloquent',
-            'model' => Admin::class,
+            'model' => AuthUser::class, // default user နေရာတွင် AuthUser ကို သုံးမည်
         ],
     ],
 

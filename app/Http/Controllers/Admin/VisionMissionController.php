@@ -23,7 +23,11 @@ class VisionMissionController extends Controller
         $data = $request->validate([$section => ['required', 'string', 'min:20', 'max:5000']]);
 
         $visionMission = VisionMission::query()->firstOrCreate(['id' => 1]);
-        $visionMission->update([$section => $data[$section], 'updated_by' => auth('admin')->id()]);
+        
+        // admins ဇယားနှင့် updated_by ကို ဖြုတ်လိုက်ပြီဖြစ်၍ ဤနေရာမှ updated_by ကို ဖယ်ရှားလိုက်ပါပြီ
+        $visionMission->update([
+            $section => $data[$section]
+        ]);
 
         return redirect()->route('admin.vision-mission.index')
             ->with('success', ucfirst($section).' updated successfully.');

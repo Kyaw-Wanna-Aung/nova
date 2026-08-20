@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -51,20 +52,26 @@
         #bulkBar{transition:transform .25s ease, opacity .25s ease;}
         .input-field{transition:all .18s ease;}
         .input-field:focus{border-color:var(--sky);box-shadow:0 0 0 4px rgba(122,185,236,0.25);}
-        @media (max-width: 1024px){
-            #sidebar{transform:translateX(-100%);}
-            #sidebar.open{transform:translateX(0);}
+
+        /* Drop-in Overlay Drawer Style (Hidden off-screen to the left by default) */
+        #sidebar {
+            transform: translateX(-100%);
+            box-shadow: 25px 0 60px rgba(0, 0, 0, 0.35);
+        }
+        #sidebar.open {
+            transform: translateX(0);
         }
     </style>
 
     @stack('styles')
 </head>
 <body class="text-[#1F2937]">
-<div class="flex min-h-screen">
+<div class="flex min-h-screen relative">
 
     @include('layouts.partials.sidebar')
 
-    <div id="overlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/30 z-30 lg:hidden"></div>
+    {{-- Backdrop Overlay when the sidebar drops in front --}}
+    <div id="overlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/40 backdrop-blur-[2px] z-30 transition-opacity"></div>
 
     <div class="flex-1 min-w-0 flex flex-col">
 
@@ -93,19 +100,23 @@
     <span id="toastMsg">Done</span>
 </div>
 
-{{-- Global JS shared across admin pages --}}
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script>
     function toggleSidebar(){
-        document.getElementById('sidebar').classList.toggle('open');
-        document.getElementById('overlay').classList.toggle('hidden');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('hidden');
     }
+
     function toggleDropdown(id, btn){
         const panel = document.getElementById(id);
         const chevron = btn.querySelector('.dropdown-chevron');
         panel.classList.toggle('hidden');
-        chevron.classList.toggle('rotated');
+        if(chevron) chevron.classList.toggle('rotated');
     }
+
     let toastTimer;
     function showToast(msg){
         const toast = document.getElementById('toast');
@@ -114,7 +125,7 @@
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toast.classList.add('translate-y-24','opacity-0'), 2400);
     }
-    // Expose CSRF token for fetch()-based AJAX calls in child views
+
     window.CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 </script>
 

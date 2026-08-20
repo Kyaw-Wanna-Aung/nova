@@ -1,6 +1,7 @@
 ﻿<header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-[#E7ECF1] px-4 sm:px-8 py-4 flex items-center gap-4">
-    <button onclick="toggleSidebar()" class="lg:hidden text-[var(--navy)]">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    {{-- Bubble Menu Button (Visible on all screen sizes) --}}
+    <button onclick="toggleSidebar()" class="w-10 h-10 rounded-full bg-[#F1F4F8] hover:bg-[#e7edf5] text-[var(--navy)] flex items-center justify-center transition shadow-sm border border-[#E7ECF1] shrink-0" title="Toggle Sidebar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
     </button>
 
     <div>

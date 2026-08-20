@@ -2,10 +2,7 @@
 
 @section('title', 'Route Management')
 @section('page_title', 'Route Management')
-@section(
-    'page_subtitle',
-    'Manage routes shared by the website and mobile application.'
-)
+@section('page_subtitle', 'Manage routes shared by the website and mobile application.')
 
 @section('content')
 
@@ -32,78 +29,77 @@
         </button>
     </div>
 
-    {{-- Filters --}}
+    {{-- Filters with Searchable Dropdowns --}}
     <div class="card p-5">
         <form
             method="GET"
             action="{{ route('admin.route-management.index') }}"
             class="grid gap-3 md:grid-cols-4"
         >
-            <div>
-                <label class="text-xs font-semibold text-slate-500">
-                    Search
+            {{-- Filter Route Searchable --}}
+            <div class="relative">
+                <label class="text-xs font-semibold text-slate-500 block mb-1.5">
+                    Search Route
                 </label>
-
-                <input
-                    type="text"
-                    name="search"
-                    value="{{ request('search') }}"
-                    placeholder="Route or township..."
-                    class="mt-1.5 w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none"
-                >
+                <div class="flex rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm items-center px-3 py-2">
+                    <input
+                        type="text"
+                        id="filter_route_search"
+                        placeholder="All routes..."
+                        value="{{ request('search') }}"
+                        class="w-full text-sm outline-none bg-transparent"
+                        autocomplete="off"
+                    >
+                </div>
+                <input type="hidden" name="search" id="filter_route_hidden" value="{{ request('search') }}">
+                <div
+                    id="filter_route_dropdown_list"
+                    class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl hidden"
+                ></div>
             </div>
 
-            <div>
-                <label class="text-xs font-semibold text-slate-500">
+            {{-- Filter Departure Township Searchable --}}
+            <div class="relative">
+                <label class="text-xs font-semibold text-slate-500 block mb-1.5">
                     Departure
                 </label>
-
-                <select
-                    name="departure_id"
-                    class="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm"
-                >
-                    <option value="">All departures</option>
-
-                    @foreach ($townships as $township)
-                        <option
-                            value="{{ $township->id }}"
-                            @selected(
-                                (string) request('departure_id')
-                                === (string) $township->id
-                            )
-                        >
-                           {{ $township->name }}
-({{ $township->mm_name }})
-— {{ $township->region_name }}
-                        </option>
-                    @endforeach
-                </select>
+                <div class="flex rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm items-center px-3 py-2">
+                    <input
+                        type="text"
+                        id="filter_departure_search"
+                        placeholder="All departures..."
+                        value="{{ request('departure_id') ? optional($townships->firstWhere('id', request('departure_id')))->name : '' }}"
+                        class="w-full text-sm outline-none bg-transparent"
+                        autocomplete="off"
+                    >
+                </div>
+                <input type="hidden" name="departure_id" id="filter_departure_id" value="{{ request('departure_id') }}">
+                <div
+                    id="filter_departure_dropdown_list"
+                    class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl hidden"
+                ></div>
             </div>
 
-            <div>
-                <label class="text-xs font-semibold text-slate-500">
+            {{-- Filter Arrival Township Searchable --}}
+            <div class="relative">
+                <label class="text-xs font-semibold text-slate-500 block mb-1.5">
                     Arrival
                 </label>
-
-                <select
-                    name="arrival_id"
-                    class="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm"
-                >
-                    <option value="">All arrivals</option>
-
-                    @foreach ($townships as $township)
-                        <option
-                            value="{{ $township->id }}"
-                            @selected(
-                                (string) request('arrival_id')
-                                === (string) $township->id
-                            )
-                        >
-                            {{ $township->name }}
-                            ({{ $township->mm_name }})
-                        </option>
-                    @endforeach
-                </select>
+                <div class="flex rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm items-center px-3 py-2">
+                    <input
+                        type="text"
+                        id="filter_arrival_search"
+                        placeholder="All arrivals..."
+                        value="{{ request('arrival_id') ? optional($townships->firstWhere('id', request('arrival_id')))->name : '' }}"
+                        class="w-full text-sm outline-none bg-transparent"
+                        autocomplete="off"
+                    >
+                </div>
+                <input type="hidden" name="arrival_id" id="filter_arrival_id" value="{{ request('arrival_id') }}">
+                <div
+                    id="filter_arrival_dropdown_list"
+                    class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl hidden"
+                ></div>
             </div>
 
             <div class="flex items-end gap-2">
@@ -220,33 +216,23 @@
                             <td class="px-5 py-4 text-right">
                                 <div class="inline-flex gap-2">
 
-                        @php
-    $routeEditData = [
-        'id' => $route->id,
-        'route_name' => $route->route_name,
-        'departure_id' => $route->departure_id,
-        'arrival_id' => $route->arrival_id,
-        'distance' => $route->distance,
-        'estimated_time' => $route->estimated_time,
-        'route_time' => $route->route_time,
-        'discount' => $route->discount,
-    ];
-@endphp
-<button
-    type="button"
-    class="edit-route-btn rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-[var(--navy)]"
-    data-update-url="{{ route('admin.route-management.update', $route) }}"
-    data-id="{{ $route->id }}"
-    data-route-name="{{ $route->route_name }}"
-    data-departure-id="{{ $route->departure_id }}"
-    data-arrival-id="{{ $route->arrival_id }}"
-    data-distance="{{ $route->distance }}"
-    data-estimated-time="{{ $route->estimated_time }}"
-    data-route-time="{{ $route->route_time }}"
-    data-discount="{{ $route->discount }}"
->
-    Edit
-</button>
+                                    <button
+                                        type="button"
+                                        class="edit-route-btn rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-[var(--navy)]"
+                                        data-update-url="{{ route('admin.route-management.update', $route) }}"
+                                        data-id="{{ $route->id }}"
+                                        data-route-name="{{ $route->route_name }}"
+                                        data-departure-id="{{ $route->departure_id }}"
+                                        data-departure-text="{{ $route->departure ? $route->departure->name . ' (' . $route->departure->mm_name . ')' : '' }}"
+                                        data-arrival-id="{{ $route->arrival_id }}"
+                                        data-arrival-text="{{ $route->arrival ? $route->arrival->name . ' (' . $route->arrival->mm_name . ')' : '' }}"
+                                        data-distance="{{ $route->distance }}"
+                                        data-estimated-time="{{ $route->estimated_time }}"
+                                        data-route-time="{{ $route->route_time }}"
+                                        data-discount="{{ $route->discount }}"
+                                    >
+                                        Edit
+                                    </button>
 
                                     <form
                                         method="POST"
@@ -363,55 +349,66 @@
 
                 <div class="grid gap-4 sm:grid-cols-2">
 
+                    <!-- Departure Township -->
                     <div>
-                        <label class="text-sm font-medium text-slate-600">
+                        <label class="text-sm font-medium text-slate-600 block mb-1.5">
                             Departure Township
                         </label>
+                        <div class="relative">
+                            <div class="flex rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm items-center px-3 py-2">
+                                <input
+                                    type="text"
+                                    id="departure_search"
+                                    placeholder="Search township..."
+                                    class="w-full text-sm outline-none bg-transparent"
+                                    autocomplete="off"
+                                >
+                                <select
+                                    id="departure_category"
+                                    class="border-l border-slate-200 bg-slate-50 px-2 py-1.5 text-xs font-semibold text-slate-600 outline-none cursor-pointer rounded-lg ml-1"
+                                >
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="departure_id" id="departure_id" required>
 
-                        <select
-                            id="departure_id"
-                            name="departure_id"
-                            class="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm"
-                            required
-                        >
-                            <option value="">
-                                Select departure
-                            </option>
-
-                            @foreach ($townships as $township)
-                                <option value="{{ $township->id }}">
-                                  {{ $township->name }}
-({{ $township->mm_name }})
-— {{ $township->region_name }}
-                                </option>
-                            @endforeach
-                        </select>
+                            <div
+                                id="departure_dropdown_list"
+                                class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl hidden"
+                            ></div>
+                        </div>
                     </div>
 
+                    <!-- Arrival Township -->
                     <div>
-                        <label class="text-sm font-medium text-slate-600">
+                        <label class="text-sm font-medium text-slate-600 block mb-1.5">
                             Arrival Township
                         </label>
+                        <div class="relative">
+                            <div class="flex rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm items-center px-3 py-2">
+                                <input
+                                    type="text"
+                                    id="arrival_search"
+                                    placeholder="Search township..."
+                                    class="w-full text-sm outline-none bg-transparent"
+                                    autocomplete="off"
+                                >
+                                <select
+                                    id="arrival_category"
+                                    class="border-l border-slate-200 bg-slate-50 px-2 py-1.5 text-xs font-semibold text-slate-600 outline-none cursor-pointer rounded-lg ml-1"
+                                >
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="arrival_id" id="arrival_id" required>
 
-                        <select
-                            id="arrival_id"
-                            name="arrival_id"
-                            class="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm"
-                            required
-                        >
-                            <option value="">
-                                Select arrival
-                            </option>
-
-                            @foreach ($townships as $township)
-                                <option value="{{ $township->id }}">
-                                 {{ $township->name }}
-({{ $township->mm_name }})
-— {{ $township->region_name }}
-                                </option>
-                            @endforeach
-                        </select>
+                            <div
+                                id="arrival_dropdown_list"
+                                class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl hidden"
+                            ></div>
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2">
@@ -506,8 +503,118 @@
 </div>
 
 @endsection
+
 @push('scripts')
 <script>
+const townshipsData = @json($townships);
+const routesData = @json($routes->pluck('route_name')->unique()->values());
+
+function setupSearchableDropdown(prefix, hasCategory = false, dataList = townshipsData, isRouteFilter = false) {
+    const searchInput = document.getElementById(prefix + '_search');
+    const categorySelect = document.getElementById(prefix + '_category');
+    const hiddenInput = document.getElementById(prefix + (isRouteFilter ? '_hidden' : '_id'));
+    const dropdownList = document.getElementById(prefix + '_dropdown_list');
+
+    if (hasCategory && categorySelect) {
+        const regions = [...new Set(dataList.map(t => t.region_name).filter(Boolean))];
+        categorySelect.innerHTML = '<option value="">All</option>';
+        regions.forEach(reg => {
+            const opt = document.createElement('option');
+            opt.value = reg;
+            opt.textContent = reg;
+            categorySelect.appendChild(opt);
+        });
+    }
+
+    function renderList(filterText = '', selectedCategory = '') {
+        const query = filterText.toLowerCase();
+        const filtered = dataList.filter(item => {
+            if (isRouteFilter) {
+                return query === '' || item.toLowerCase().includes(query);
+            } else {
+                const matchesCat = !hasCategory || selectedCategory === '' || item.region_name === selectedCategory;
+                const matchesQuery = query === '' || 
+                    (item.name && item.name.toLowerCase().includes(query)) || 
+                    (item.mm_name && item.mm_name.includes(query));
+                return matchesCat && matchesQuery;
+            }
+        });
+
+        if (filtered.length === 0) {
+            dropdownList.innerHTML = '<div class="px-3.5 py-2.5 text-sm text-slate-400">No results found</div>';
+        } else {
+            dropdownList.innerHTML = filtered.map(item => {
+                if (isRouteFilter) {
+                    return `
+                        <div data-name="${item}" class="dropdown-item cursor-pointer px-3.5 py-2.5 text-sm text-slate-700 hover:bg-blue-50 border-b border-slate-50">
+                            <span class="font-semibold text-slate-800">${item}</span>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div data-id="${item.id}" data-name="${item.name} (${item.mm_name})" class="dropdown-item cursor-pointer px-3.5 py-2.5 text-sm text-slate-700 hover:bg-blue-50 border-b border-slate-50 flex justify-between items-center">
+                            <div>
+                                <span class="font-semibold text-slate-800">${item.name}</span>
+                                <span class="text-xs text-slate-400 ml-1">(${item.mm_name})</span>
+                            </div>
+                            <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">${item.region_name}</span>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+        dropdownList.classList.remove('hidden');
+    }
+
+    searchInput.addEventListener('focus', () => {
+        renderList(searchInput.value, hasCategory ? categorySelect.value : '');
+    });
+
+    searchInput.addEventListener('input', () => {
+        hiddenInput.value = searchInput.value;
+        renderList(searchInput.value, hasCategory ? categorySelect.value : '');
+    });
+
+    if (hasCategory && categorySelect) {
+        categorySelect.addEventListener('change', () => {
+            renderList(searchInput.value, categorySelect.value);
+        });
+    }
+
+    dropdownList.addEventListener('click', (e) => {
+        const itemEl = e.target.closest('.dropdown-item');
+        if (itemEl) {
+            if (isRouteFilter) {
+                hiddenInput.value = itemEl.dataset.name;
+                searchInput.value = itemEl.dataset.name;
+            } else {
+                hiddenInput.value = itemEl.dataset.id;
+                searchInput.value = itemEl.dataset.name;
+            }
+            dropdownList.classList.add('hidden');
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !dropdownList.contains(e.target) && (!hasCategory || !categorySelect.contains(e.target))) {
+            dropdownList.classList.add('hidden');
+        }
+    });
+
+    // Return helper methods so modal open/edit functions can control them properly
+    return {
+        reset: function() {
+            searchInput.value = '';
+            hiddenInput.value = '';
+            if (hasCategory && categorySelect) categorySelect.value = '';
+        },
+        setValue: function(id, text) {
+            hiddenInput.value = id ?? '';
+            searchInput.value = text ?? '';
+        }
+    };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const routeModal = document.getElementById('routeModal');
     const routeForm = document.getElementById('travelRouteForm');
@@ -515,9 +622,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const routeModalTitle = document.getElementById('routeModalTitle');
     const routeSubmitButton = document.getElementById('routeSubmitButton');
 
-    const routeStoreUrl = @json(
-        route('admin.route-management.store')
-    );
+    setupSearchableDropdown('filter_route', false, routesData, true);
+    setupSearchableDropdown('filter_departure', false, townshipsData, false);
+    setupSearchableDropdown('filter_arrival', false, townshipsData, false);
+
+    const departureDropdown = setupSearchableDropdown('departure', true, townshipsData, false);
+    const arrivalDropdown = setupSearchableDropdown('arrival', true, townshipsData, false);
+
+    const routeStoreUrl = @json(route('admin.route-management.store'));
 
     function showRouteModal() {
         routeModal.classList.remove('hidden');
@@ -533,6 +645,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.openCreateModal = function () {
         routeForm.reset();
+        departureDropdown.reset();
+        arrivalDropdown.reset();
 
         routeForm.action = routeStoreUrl;
         routeFormMethod.value = 'POST';
@@ -546,35 +660,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function openEditModal(button) {
-        document.getElementById('route_name').value =
-            button.dataset.routeName ?? '';
+        document.getElementById('route_name').value = button.dataset.routeName ?? '';
 
-        document.getElementById('departure_id').value =
-            button.dataset.departureId ?? '';
+        departureDropdown.setValue(button.dataset.departureId, button.dataset.departureText);
+        arrivalDropdown.setValue(button.dataset.arrivalId, button.dataset.arrivalText);
 
-        document.getElementById('arrival_id').value =
-            button.dataset.arrivalId ?? '';
-
-        document.getElementById('distance').value =
-            button.dataset.distance ?? '';
-
-        document.getElementById('estimated_time').value =
-            button.dataset.estimatedTime ?? '';
+        document.getElementById('distance').value = button.dataset.distance ?? '';
+        document.getElementById('estimated_time').value = button.dataset.estimatedTime ?? '';
 
         const routeTime = button.dataset.routeTime ?? '';
+        document.getElementById('route_time').value = routeTime.substring(0, 5);
 
-        document.getElementById('route_time').value =
-            routeTime.substring(0, 5);
+        document.getElementById('discount').value = button.dataset.discount ?? '0';
 
-        document.getElementById('discount').value =
-            button.dataset.discount ?? '0';
-
-        // IMPORTANT:
-        // Use the Laravel-generated update URL directly.
         routeForm.action = button.dataset.updateUrl;
-
-        // Laravel method spoofing:
-        // browser sends POST + _method=PUT
         routeFormMethod.value = 'PUT';
 
         routeModalTitle.textContent = 'Edit Route';
@@ -589,6 +688,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    routeForm.addEventListener('submit', (e) => {
+        const depId = document.getElementById('departure_id').value;
+        const arrId = document.getElementById('arrival_id').value;
+        
+        if (!depId || !arrId) {
+            e.preventDefault();
+            alert('Please select a valid Departure and Arrival township from the dropdown list.');
+        }
+    });
+
     routeModal.addEventListener('click', (event) => {
         if (event.target === routeModal) {
             closeRouteModal();
@@ -596,10 +705,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('keydown', (event) => {
-        if (
-            event.key === 'Escape' &&
-            !routeModal.classList.contains('hidden')
-        ) {
+        if (event.key === 'Escape' && !routeModal.classList.contains('hidden')) {
             closeRouteModal();
         }
     });

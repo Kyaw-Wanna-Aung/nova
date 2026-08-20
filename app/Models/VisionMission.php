@@ -4,16 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VisionMission extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['vision', 'mission', 'updated_by'];
+    // updated_by ကို ဖြုတ်လိုက်ပါပြီ
+    protected $fillable = ['vision', 'mission'];
 
-    public function updatedBy(): BelongsTo
-    {
-        return $this->belongsTo(Admin::class, 'updated_by');
-    }
+    // Admin relationship လည်း မလိုတော့လို့ ဖယ်ရှားလိုက်ပါပြီ
 }
