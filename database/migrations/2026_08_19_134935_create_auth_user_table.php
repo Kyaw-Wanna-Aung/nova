@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('last_name', 150)->nullable();
             $table->string('email', 254)->nullable();
             $table->boolean('is_active')->default(1);
+            $table->rememberToken();
             $table->dateTime('date_joined')->nullable();
             $table->timestamps();
         });

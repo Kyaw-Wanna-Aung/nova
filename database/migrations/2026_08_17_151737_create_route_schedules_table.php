@@ -20,7 +20,7 @@ return new class extends Migration
             // travel_routes ဇယားသို့ မှန်ကန်စွာ ချိတ်ဆက်ခြင်း
             $table->foreign('route_id')->references('id')->on('travel_routes')->onDelete('cascade');
             $table->foreign('driver_id')->references('id')->on('novapi_driverprofile')->onDelete('set null');
-            $table->foreign('vehicle_id')->references('id')->on('novapi_vehicles')->onDelete('set null');
+            $table->foreign('vehicle_id')->references('id')->on('novapi_vehicle')->onDelete('set null');
         });
     }
 

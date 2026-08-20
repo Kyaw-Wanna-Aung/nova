@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class NovapiDriverProfiles extends Model
 {
-    protected $table = 'novapi_driverprofiles';
+    protected $table = 'novapi_driverprofile';
 }
