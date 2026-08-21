@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\Admin\HeroBannerController as AdminHeroBannerController;
 use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 use App\Http\Controllers\Api\AdminAuthController as ApiAdminAuthController;
@@ -12,6 +11,10 @@ use App\Http\Controllers\Api\TestimonialController as ApiTestimonialController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\NewsletterController as ApiNewsletterController;
 use App\Http\Controllers\Api\VisionMissionController as ApiVisionMissionController;
+use App\Http\Controllers\Api\VehicleBrandController as ApiVehicleBrandController;
+use App\Http\Controllers\Api\VehicleModelController as ApiVehicleModelController;
+use App\Http\Controllers\Api\VehicleController as ApiVehicleController;
+
 /*
 |--------------------------------------------------------------------------
 | Public API Endpoints
@@ -47,10 +50,100 @@ Route::post('/admin/login', [ApiAdminAuthController::class, 'login']);
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth:sanctum')
-    ->prefix('admin')
-    ->group(function () {
+Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | Vehicle Brand Management
+        |--------------------------------------------------------------------------
+        */
+        Route::get(
+            '/vehicle-brands',
+            [ApiVehicleBrandController::class, 'index']
+        );
 
+        Route::post(
+            '/vehicle-brands',
+            [ApiVehicleBrandController::class, 'store']
+        );
+
+        Route::put(
+            '/vehicle-brands/{vehicleBrand}',
+            [ApiVehicleBrandController::class, 'update']
+        );
+
+        Route::delete(
+            '/vehicle-brands/{vehicleBrand}',
+            [ApiVehicleBrandController::class, 'destroy']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Vehicle Model Management
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/vehicle-models',
+            [ApiVehicleModelController::class, 'index']
+        );
+
+        Route::post(
+            '/vehicle-models',
+            [ApiVehicleModelController::class, 'store']
+        );
+
+        Route::put(
+            '/vehicle-models/{vehicleModel}',
+            [ApiVehicleModelController::class, 'update']
+        );
+
+        Route::delete(
+            '/vehicle-models/{vehicleModel}',
+            [ApiVehicleModelController::class, 'destroy']
+        );
+        /*
+        |--------------------------------------------------------------------------
+        | Vehicle Management
+        |--------------------------------------------------------------------------
+        */
+        Route::post(
+            '/vehicles',
+            [ApiVehicleController::class, 'store']
+        );
+        Route::put(
+        '/vehicles/{vehicle}',
+        [ApiVehicleController::class, 'update']
+            );
+        Route::get(
+            '/vehicles/{vehicleId}/history',
+            [ApiVehicleController::class, 'history']
+        );
+        Route::delete(
+            '/vehicles/{vehicle}',
+            [ApiVehicleController::class, 'destroy']
+        );
+        
+        Route::patch(
+            '/vehicles/{vehicle}/approve',
+            [ApiVehicleController::class, 'approve']
+        );
+
+        Route::patch(
+            '/vehicles/{vehicle}/reject',
+            [ApiVehicleController::class, 'reject']
+        );
+        Route::get(
+            '/vehicles',
+            [ApiVehicleController::class, 'index']
+        );
+        Route::get(
+            '/vehicles/{vehicle}',
+            [ApiVehicleController::class, 'show']
+        );
+        Route::patch(
+            '/vehicles/{vehicle}/status',
+            [ApiVehicleController::class, 'updateStatus']
+        );
         /*
         |--------------------------------------------------------------------------
         | Admin Account
